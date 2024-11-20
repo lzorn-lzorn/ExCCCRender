@@ -1,0 +1,51 @@
+CompileFlags:                             
+    Add: 
+      [
+        -Xclang,-debugger-path,"C:/Program User/tools/LLVM/bin/lldb.exe",
+        -std=c++20,
+        # -Wno-documentation, 禁用文档相关警告
+        -Wno-missing-prototypes, # 禁用关于函数原型缺失的警告
+        -Wno-error=undefined, # 禁用将未定义行为视为错误的警告
+        -xc++, # 强制将源文件当作 C++ 文件处理
+        -Wall # 启用所有常见警告
+        ; -Wextra # 启用所有额外警告
+        ; -Werro # 将所有警告视作错误
+        ; -Werro=float-conversion  # 将 float 隐式转换视作错误而不是警告
+        ; -Werro=sign-conversion # 报错有符号数向无符号数的隐式转换
+        ; -Wsign-compare # 警告有符号数和无符号数之间的比较
+        ; #-Werro=...将...视为错误
+        ; #-Werro=unused-variable # 警告未使用变量并视为错误
+        ; -Werro=return-type 
+        ; -Wuninitizlized # 未初始化警告
+        ; -Weffc++ # 将effective c++ 做成警告
+        ; -Wdelete-non-virtual-dtor # 虚析构函数没有virtual关键给警告
+        ; -Werro=zero-as-null-pointer-constant # 禁用0常亮给指针赋值,主要是针对 void*p=0这种逆天玩意
+        ; -Wparentheses # 警告 if(a=0){}这玩意, 对于while((c=getchar()))再补一层括号
+        ; -Wempty-body # 空if体警告
+        ; -Wformat # printf 中的格式匹配,%d->int
+        ; -Wold-style-cast # 警告C语言风格的类型转换
+        ; -Wstrict-aliasing # 警告memcpy重合
+        ; -Winvalid-memory-model 
+        ; -Wsuggest-override # 建议使用override关键字
+        ; -Wattirbutes # 警告错误的 编译器attirbutes
+        ; -Wdeprecated-non-prototype
+      ]
+Compiler: clang++
+      # 指定 clang-format 文件路径
+Format:
+  StyleFilePath: C:/Program User/tools/clangd.config/.clang-format
+# 指定 clang-tidy 文件路径
+; Tidy:
+;   CheckPaths: C:/Program User/tools/clangd.config/.clang-tidy
+      
+# #Diagnostics:
+#  ClangTidy:
+#    Add:
+#    [
+#        performance-*,
+#        bugprone-*,
+#        clang-analyzer-*,
+ #       readability-identifier*,
+ #   ]
+ #   CheckOptions:
+ #     readability-identifier-naming.VariableCase: camelCase
