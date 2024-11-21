@@ -1,6 +1,4 @@
-#include <string>
-#include <iostream>
-#include <concepts>
+#include "../../runtime/stdheader.h"
 
 namespace ExCCCRender::Tools {
 template <typename _Ty>

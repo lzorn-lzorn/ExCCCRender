@@ -23,7 +23,7 @@ VulkanGraphicsAPI::~VulkanGraphicsAPI() {
     instance.destroy();
 }
 
-void VulkanGraphicsAPI::_internal_create_instance() {
+void VulkanGraphicsAPI::_create_instance() {
     vk::InstanceCreateInfo createInfo{};
     vk::ApplicationInfo    appInfo{};
     appInfo.setApiVersion(VK_API_VERSION_1_3).setPEngineName("imugi");
@@ -36,4 +36,8 @@ void VulkanGraphicsAPI::_internal_create_instance() {
     instance = vk::createInstance(createInfo);
 }  // namespace ExCCCRender::Platform
 
+void VulkanGraphicsAPI::_pickup_physical_device() {
+    auto device     = instance.enumeratePhysicalDevices();
+    physical_device = device[0];  // ! 这里可以选择 GPU，通过GPU支持的特性
+}
 }  // namespace ExCCCRender::Platform

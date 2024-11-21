@@ -1,7 +1,5 @@
-#include "FileParser.hpp"
-#include <map>
-#include <variant>
-#include <iostream>
+#include "../../runtime/tools/FileParser.hpp"
+#include "../../runtime/stdheader.h"
 
 namespace ExCCCRender::Tools {
 namespace detail {

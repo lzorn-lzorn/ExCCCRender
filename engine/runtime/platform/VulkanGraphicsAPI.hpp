@@ -17,13 +17,14 @@ public:
     }
 
 public:
-    vk::Instance instance;
+    vk::Instance       instance;
+    vk::PhysicalDevice physical_device;
 
 private:
     VulkanGraphicsAPI();
 
-    void _internal_create_instance();
-    void _internal_pickup_physical_device();
+    void _create_instance();
+    void _pickup_physical_device();
 
 private:
     static std::unique_ptr<VulkanGraphicsAPI> instance_;

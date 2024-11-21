@@ -1,4 +1,4 @@
-#include "ConfigParser.hpp"
+#include "../../runtime/tools/ConfigParser.hpp"
 
 namespace ExCCCRender::Tools {
 void ConfigParser::Parser() {

@@ -1,10 +1,22 @@
-#include <concepts>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <sstream>
+#include "../../runtime/stdheader.h"
 
 namespace ExCCCRender::Tools::RegexPattern {
+namespace detail {
+static std::string concatenate_with_char(char c, const std::vector<std::string>& parts) {
+    std::ostringstream oss;
+    bool               first = true;
+    for (const auto& part : parts) {
+        if (!first) {
+            oss << (std::isalnum(c) ? std::string(1, c) : "\\" + std::string(1, c));
+            // "\\"用于 转义字符
+        }
+        oss << "(" << part << ")";
+        first = false;
+    }
+    return oss.str();
+}
+}  // namespace detail
+
 using _RegexPattern = const std::string&;
 template <typename _Ty>
 concept _Regex_Pattern_Ty = std::same_as<_Ty, _RegexPattern>;
@@ -40,19 +52,4 @@ static inline _RegexPattern connect_regex_with_char(char c, Args... args) {
     return detail::concatenate_with_char(c, {args...});
 }
 
-namespace detail {
-static std::string concatenate_with_char(char c, const std::vector<std::string>& parts) {
-    std::ostringstream oss;
-    bool               first = true;
-    for (const auto& part : parts) {
-        if (!first) {
-            oss << (std::isalnum(c) ? std::string(1, c) : "\\" + std::string(1, c));
-            // "\\"用于 转义字符
-        }
-        oss << "(" << part << ")";
-        first = false;
-    }
-    return oss.str();
-}
-}  // namespace detail
 }  // namespace ExCCCRender::Tools::RegexPattern
