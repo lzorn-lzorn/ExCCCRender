@@ -1,9 +1,11 @@
 #include "../../runtime/tools/FileParser.hpp"
+#include "../../runtime/tools/debug.hpp"
 
 namespace ExCCCRender::Tools {
 void FileParser::_path_parser() {
     if (absolute_file_path != "") {
         size_t last_separator_pos = this->absolute_file_path.find_last_of("/\\");
+
         if (last_separator_pos != std::string::npos) {
             this->file_path = this->absolute_file_path.substr(0, last_separator_pos);
             this->file_name = this->absolute_file_path.substr(last_separator_pos + 1);

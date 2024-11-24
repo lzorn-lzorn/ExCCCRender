@@ -14,8 +14,8 @@ public:
     }
 
     ~RegexHelper()                             = default;
-    RegexHelper(const RegexHelper&)            = delete;
-    RegexHelper& operator=(const RegexHelper&) = delete;
+    RegexHelper(const RegexHelper&)            = default;
+    RegexHelper& operator=(const RegexHelper&) = default;
 
     template <_Regex_Pattern_Ty... Args>
     _RegexPattern connect_regex_with_char(char c, Args... args) {
@@ -97,7 +97,7 @@ private:
         regex_table = {
             {"integer", R"(-?\d+)"},                   // 匹配整数
             {"float", R"(-?\d+\.\d+)"},                // 匹配浮点数
-            {"quoted_string", R"(\"(.*?)\")"},         // 匹配双引号字符串
+            {"string", R"(\"(.*?)\")"},                // 匹配双引号字符串
             {"character", R"(\'(.*?)\')"},             // 匹配单引号字符
             {"boolean", R"(true|false)"},              // 匹配布尔值
             {"variable", R"([a-zA-Z_][a-zA-Z0-9_]*)"}  // 匹配变量

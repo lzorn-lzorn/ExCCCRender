@@ -31,6 +31,7 @@ public:
     virtual void PrintConfigInfo() const;
 
 private:
+    //  将配置文件的字符串解析为ConfigInfo的表项
     std::optional<detail::_Value_Type> parser_config_value(const std::string& config_item_value);
 
     template <typename... _Ts>
@@ -41,6 +42,9 @@ private:
             },
             val);
     }
+
+    // 消除字符串中的所有空格
+    void clear_space(std::string&) const;
 
 private:
     std::vector<detail::IniItem> ConfigInfo;

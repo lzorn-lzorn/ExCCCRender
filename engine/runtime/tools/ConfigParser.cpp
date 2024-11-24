@@ -1,4 +1,5 @@
 #include "../../runtime/tools/ConfigParser.hpp"
+#include "../../runtime/tools/RegexHelper.hpp"
 
 namespace ExCCCRender::Tools {
 void ConfigParser::Parser() {
@@ -11,28 +12,42 @@ void ConfigParser::Parser() {
     do {
         line            = ReadNextLine();
         std::string str = *line;
-        str.erase(0, str.find_first_not_of(" \t"));
-        str.erase(str.find_last_not_of(" \t") + 1);
-        // annotation
+        if (str == "")
+            continue;
+
+        clear_space(str);
+        // annotation, 注释
         auto pos = str.find_first_of(';');
         if (pos != std::string::npos) {
             str = str.substr(0, pos);
         }
-        if (str == "")
-            continue;
 
-        std::regex config_name_pattern(R"(^\[([a-zA-Z_][a-zA-Z0-9_ ]*)\]$)");
-        std::regex congig_item_pattern(
-            R"(^\s*([a-zA-Z_][a-zA-Z0-9_]*(?:\s+[a-zA-Z_][a-zA-Z0-9_]*)*)\s*=\s*(?:(?:[a-zA-Z_][a-zA-Z0-9_]*(?:\s+[a-zA-Z_][a-zA-Z0-9_]*)*)|(?:-?\d+)|(?:-?\d+\.\d+)|(?:true|false)|(?:'[^']')|(?:\"[^\"]*\"))\s*$
-)");
+        // [VariableName]
+        auto RH_Instance       = RegexPattern::RegexHelper::GetInstance();
+        auto variable_pattern  = RH_Instance.Get()["variable"];
+        auto float_pattern     = RH_Instance.Get()["float"];
+        auto string_pattern    = RH_Instance.Get()["string"];
+        auto integer_pattern   = RH_Instance.Get()["integer"];
+        auto boolean_pattern   = RH_Instance.Get()["boolean"];
+        auto character_pattern = RH_Instance.Get()["character"];
+
+        auto key_pattern   = variable_pattern;
+        auto value_pattern = RH_Instance.regex_or(
+            variable_pattern, float_pattern, string_pattern, integer_pattern, boolean_pattern, character_pattern);
+
+        auto config_name_pattern = RH_Instance.bracket_of_('[', variable_pattern);
+        auto congig_item_pattern = RH_Instance.equation(key_pattern, value_pattern);
+
+        std::regex config_name(config_name_pattern);
+        std::regex config_item(congig_item_pattern);
 
         std::smatch     match;
         detail::IniItem item{};
-        if (std::regex_match(str, match, config_name_pattern)) {
+        if (std::regex_match(str, match, config_name)) {
             // go into the config item
             item.config_name = match[1];
             flag_config_name = true;
-        } else if (std::regex_match(str, match, congig_item_pattern)) {
+        } else if (std::regex_match(str, match, config_item)) {
             item.key                      = match[1];
             flag_config_key               = true;
             std::string config_item_value = match[2];
@@ -98,5 +113,14 @@ void ConfigParser::PrintConfigInfo() const {
         print_config_value(item.value);
         std::cout << std::endl;
     }
+}
+
+void ConfigParser::clear_space(std::string& str) const {
+    str.erase(std::remove_if(str.begin(),
+                             str.end(),
+                             [](unsigned char c) {
+                                 return std::isspace(c);
+                             }),
+              str.end());
 }
 }  // namespace ExCCCRender::Tools
