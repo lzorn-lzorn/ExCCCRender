@@ -27,8 +27,8 @@ public:
         file_stream.close();
     };
 
-    virtual bool                       Loader();
-    virtual std::optional<std::string> ReadNextLine();
+    virtual bool                     Loader();
+    virtual std::vector<std::string> GetFileContents();
 
     virtual std::string GetFilePath() const {
         return file_path;

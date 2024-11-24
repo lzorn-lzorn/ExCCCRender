@@ -45,6 +45,7 @@ private:
 
     // 消除字符串中的所有空格
     void clear_space(std::string&) const;
+    void clear_annotation(std::string&) const;
 
 private:
     std::vector<detail::IniItem> ConfigInfo;

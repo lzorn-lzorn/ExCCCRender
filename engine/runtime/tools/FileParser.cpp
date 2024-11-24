@@ -36,34 +36,25 @@ void FileParser::_extension_parser() {
 }
 
 bool FileParser::Loader() {
-    if (!std::filesystem::exists(absolute_file_path)) {
-        std::cerr << "file: " << absolute_file_path << " not exist\n";
-        return false;
-    }
-
     file_stream.open(absolute_file_path, std::ios::in);
     if (!file_stream.is_open()) {
         std::cerr << "open file fail\n";
         return false;
     }
-
     return true;
 }
 
-std::optional<std::string> FileParser::ReadNextLine() {
-    std::string str_line;
-    if (std::getline(file_stream, str_line)) {
-        if (str_line.empty()) {
-            return ReadNextLine();  // 递归读取下一行
+std::vector<std::string> FileParser::GetFileContents() {
+    if (!file_stream.good()) {
+        std::cerr << "file stream error" << std::endl;
+    }
+    std::vector<std::string> contents;
+    std::string              line;
+    while (std::getline(file_stream, line)) {
+        if (!line.empty()) {
+            contents.push_back(line);
         }
-        return std::optional(str_line);
     }
-
-    if (file_stream.eof()) {
-        std::cerr << "reading file is over\n";
-        return std::nullopt;
-    }
-    std::cerr << "reading file error\n";
-    return std::nullopt;
+    return contents;
 }
 }  // namespace ExCCCRender::Tools

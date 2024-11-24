@@ -1,27 +1,34 @@
 #include "../../runtime/tools/ConfigParser.hpp"
 #include "../../runtime/tools/RegexHelper.hpp"
+#include "../../runtime/tools/debug.hpp"
 
 namespace ExCCCRender::Tools {
 void ConfigParser::Parser() {
-    std::optional<std::string> line{};
-    bool                       flag_config_name  = false;
-    bool                       flag_config_key   = false;
-    bool                       flag_config_value = false;
+    std::vector<std::string> lines = GetFileContents();
+
+    if (lines.empty()) {
+        return;
+    }
+    bool flag_config_name  = false;
+    bool flag_config_key   = false;
+    bool flag_config_value = false;
+
+    std::string          line;
+    size_t               size = lines.size();
+    detail::_Config_Type config{};
     // If one of them(flag_config_name,flag_config_key,flag_config_value) is not completed, continue until all are
     // completed
-    do {
-        line            = ReadNextLine();
-        std::string str = *line;
-        if (str == "")
-            continue;
+    for (size_t i = 0; i < size; i++) {
 
-        clear_space(str);
+        line = lines[i];
+        // space, 空格
+        clear_space(line);
         // annotation, 注释
-        auto pos = str.find_first_of(';');
-        if (pos != std::string::npos) {
-            str = str.substr(0, pos);
-        }
+        clear_annotation(line);
 
+        if (line.empty()) {
+            continue;
+        }
         // [VariableName]
         auto RH_Instance       = RegexPattern::RegexHelper::GetInstance();
         auto variable_pattern  = RH_Instance.Get()["variable"];
@@ -43,34 +50,26 @@ void ConfigParser::Parser() {
 
         std::smatch     match;
         detail::IniItem item{};
-        if (std::regex_match(str, match, config_name)) {
+
+        if (std::regex_match(line, match, config_name)) {
             // go into the config item
-            item.config_name = match[1];
-            flag_config_name = true;
-        } else if (std::regex_match(str, match, config_item)) {
+            config = match[1];
+        } else if (std::regex_match(line, match, config_item)) {
+            item.config_name              = config;
             item.key                      = match[1];
-            flag_config_key               = true;
             std::string config_item_value = match[2];
             item.value                    = *(parser_config_value(config_item_value));
-            flag_config_value             = true;
         } else {
-            std::cerr << "error string is : {" << str << "}" << std::endl;
+            std::cerr << "error string is : {" << line << "}" << std::endl;
             throw std::invalid_argument("Invalid config");
         }
-        if (flag_config_name && flag_config_key && flag_config_value) {
-            this->ConfigInfo.push_back(item);
-            flag_config_name  = false;
-            flag_config_key   = false;
-            flag_config_value = false;
-            item              = {};
-        }
-    } while (line != std::nullopt);
+        this->ConfigInfo.push_back(item);
+        item = {};
+    }
 }
 
 std::optional<detail::_Value_Type> ConfigParser::parser_config_value(const std::string& config_item_value) {
     std::string value = config_item_value;
-    value.erase(0, value.find_first_not_of(" \t"));
-    value.erase(value.find_last_not_of(" \t") + 1);
     // boolean
     if (value == "ture")
         return true;
@@ -95,7 +94,7 @@ std::optional<detail::_Value_Type> ConfigParser::parser_config_value(const std::
 
     // std::string
     if ((value.front() == '"' && value.back() == '"') || (value.front() == '\'' && value.back() == '\'')) {
-        return value.substr(1, value.size() - 2);
+        return value;
     }
 
     // variable check
@@ -108,8 +107,11 @@ std::optional<detail::_Value_Type> ConfigParser::parser_config_value(const std::
 }
 
 void ConfigParser::PrintConfigInfo() const {
+    if (ConfigInfo.empty()) {
+        std::cout << "Config is empty" << std::endl;
+    }
     for (const auto& item : ConfigInfo) {
-        std::cout << std::format("Config: {}, Key:{}, Value: ", item.config_name, item.key);
+        std::cout << std::format(" Config-{}, Key:{}, Value: ", item.config_name, item.key);
         print_config_value(item.value);
         std::cout << std::endl;
     }
@@ -122,5 +124,12 @@ void ConfigParser::clear_space(std::string& str) const {
                                  return std::isspace(c);
                              }),
               str.end());
+}
+
+void ConfigParser::clear_annotation(std::string& str) const {
+    auto pos = str.find_first_of(';');
+    if (pos != std::string::npos) {
+        str = str.substr(0, pos);
+    }
 }
 }  // namespace ExCCCRender::Tools

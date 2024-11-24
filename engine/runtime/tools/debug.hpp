@@ -5,7 +5,7 @@ namespace ExCCCRender::Tools {  // 定义 debug 宏
     #define LOG(...)
 #else  // debug
     // LOG 宏
-    #define _LOG(...) log_impl(std::cout, __VA_ARGS__)
+    #define LOG(...) log_impl(std::cout, __VA_ARGS__)
 #endif
 
 template <typename... Args>
