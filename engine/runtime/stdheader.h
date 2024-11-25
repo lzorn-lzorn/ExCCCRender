@@ -19,3 +19,6 @@
 #include <sstream>
 #include <unordered_map>
 #include <functional>
+#include <new>
+#include <memory_resource>
+#include <array>
