@@ -17,10 +17,9 @@ using namespace std::pmr;
 
     16KB的内存同比缩小4倍
 */
+
 static std::array<size_t, 9> block_size_table;
 static std::array<size_t, 9> block_number_table;
-static MemoryPool*           instance = nullptr;
-static std::once_flag        init_instance_flag;
 
 namespace detail {
 using _Block_Size = size_t;
@@ -52,8 +51,11 @@ public:
         init_block();
     }
 
-    void* allocate(size_t bytes, size_t aligment = alignof(std::max_align_t));
-    void* deallocate(void* p, size_t bytes, size_t aligment = alignof(std::max_align_t));
+    void* allocate(size_t bytes, size_t aligment = alignof(std::max_align_t)) {
+    }
+
+    void* deallocate(void* p, size_t bytes, size_t aligment = alignof(std::max_align_t)) {
+    }
 
     ~PoolTable() {
         destory();
@@ -90,8 +92,13 @@ public:
     virtual ~MemoryPoolImpl() {
     }
 
-    void* allocate(size_t bytes, size_t aligment = alignof(std::max_align_t));
-    void* deallocate(void* p, size_t bytes, size_t aligment = alignof(std::max_align_t));
+    void* allocate(size_t bytes, size_t aligment = alignof(std::max_align_t)) {
+        return nullptr;
+    }
+
+    void* deallocate(void* p, size_t bytes, size_t aligment = alignof(std::max_align_t)) {
+        return nullptr;
+    }
 
 private:
     std::pmr::memory_resource* upstream_allocator;  // 封装系统原始 malloc
@@ -105,22 +112,35 @@ private:
 protected:
     // 返回一个指向所分配内存块的指针，内存块的大小至少为 bytes 字节，并满足 alignment 对齐要求
     // 如果实现无法满足这一要求，应抛出 std::bad_alloc。
-    virtual void* do_allocate(std::size_t bytes, std::size_t alignment) override;
-    virtual void  do_deallocate(void* p, size_t bytes, size_t alinment) override;
-    virtual bool  do_is_equal(const std::pmr::memory_resource& other) const noexcept override;
+    virtual void* do_allocate(std::size_t bytes, std::size_t alignment) override {
+        return nullptr;
+    }
+
+    virtual void do_deallocate(void* p, size_t bytes, size_t alinment) override {
+    }
+
+    virtual bool do_is_equal(const std::pmr::memory_resource& other) const noexcept override {
+        return true;
+    }
 };
 }  // namespace detail
 
 class MemoryPool : public detail::MemoryPoolImpl {
 public:
     static MemoryPool& GetInstance() {
+        static std::once_flag init_instance_flag;
         std::call_once(init_instance_flag, []() {
             // 初始化 instance
+            instance = std::make_unique<MemoryPool>();
         });
         return *instance;
     }
 
-    static void DestroyInstance() {
+    void InitMemoryPool() {
+        m_upstream = std::make_unique<MemoryPoolImpl>();
+    }
+
+    ~MemoryPool() {
         // 析构资源
         instance = nullptr;
     }
@@ -142,18 +162,9 @@ private:
         return other.is_equal(*m_upstream);
     }
 
-    MemoryPool() {
-        // 初始化父类
-    }
-
-    ~MemoryPool() {
-        // 析构父类
-    }
-
 private:
-    static MemoryPool*    instance;
-    static std::once_flag init_instance_flag;
-    MemoryPoolImpl*       m_upstream;
+    static std::unique_ptr<MemoryPool> instance;
+    std::unique_ptr<MemoryPoolImpl>    m_upstream;
 };
 
 }  // namespace ExCCCRender::Platform::MemoryPool
