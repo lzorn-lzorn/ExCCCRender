@@ -25,16 +25,16 @@ namespace detail {
 using _Block_Size = size_t;
 
 struct MemoryBlock {
-    void*        ptr;  // 指向内存空间的链表
+    void*        data;  // 指向内存空间的链表
     MemoryBlock* next;
     MemoryBlock* prev;
 
-    MemoryBlock(size_t size, MemoryBlock* next, MemoryBlock* prev) : next(next), prev(prev), ptr(ptr) {
-        ptr = malloc(size);
+    MemoryBlock(size_t size, MemoryBlock* next = nullptr, MemoryBlock* prev = nullptr) : next(next), prev(prev) {
+        data = malloc(size);
     }
 
     ~MemoryBlock() {
-        free(ptr);
+        free(data);
         next = nullptr;
         prev = nullptr;
     }
@@ -69,21 +69,24 @@ public:
         return assigned_size;
     }
 
+    bool check() const;
+
 private:
     void init_block();
     void destory();
 
 private:
     _Block_Size size;
-
-    size_t available_size;
-    size_t assigned_size;
+    size_t      available_size;
+    size_t      assigned_size;
 };
 
 class MemoryPoolImpl : public std::pmr::memory_resource {
 public:
     explicit MemoryPoolImpl(std::pmr::memory_resource* upstream = std::pmr::get_default_resource())
         : upstream_allocator(upstream) {
+        set_size_table();
+        init_pool_table();
     }
 
     MemoryPoolImpl(const MemoryPoolImpl&)            = delete;
@@ -100,12 +103,22 @@ public:
         return nullptr;
     }
 
+    bool check() const {
+        auto size = pools.size();
+        for (size_t i = 0; i < size; ++i) {
+            if (!pools[i]->check()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 private:
     std::pmr::memory_resource* upstream_allocator;  // 封装系统原始 malloc
     std::array<PoolTable*, 9>  pools;
 
 private:
-    void init_memory_pool();  // 使用 block_size_table 初始化内存池
+    void set_size_table();  // 使用 block_size_table 初始化内存池
     void init_pool_table();
     void destory();
 
@@ -125,46 +138,40 @@ protected:
 };
 }  // namespace detail
 
-class MemoryPool : public detail::MemoryPoolImpl {
+class MemoryPool : public std::pmr::memory_resource {
 public:
-    static MemoryPool& GetInstance() {
-        static std::once_flag init_instance_flag;
-        std::call_once(init_instance_flag, []() {
-            // 初始化 instance
-            instance = std::make_unique<MemoryPool>();
-        });
-        return *instance;
-    }
-
-    void InitMemoryPool() {
-        m_upstream = std::make_unique<MemoryPoolImpl>();
+    MemoryPool() {
+        InitMemoryPool();
     }
 
     ~MemoryPool() {
         // 析构资源
-        instance = nullptr;
+        pool = nullptr;
     }
 
 private:
+    void InitMemoryPool() {
+        pool = std::make_unique<detail::MemoryPoolImpl>();
+    }
+
     // 只是负责监控内存而已
     void* do_allocate(std::size_t bytes, std::size_t alignment) override {
-        void* ptr = m_upstream->allocate(bytes, alignment);
+        void* ptr = pool->allocate(bytes, alignment);
         // 监控内存使用
         return ptr;
     }
 
     void do_deallocate(void* p, size_t bytes, size_t alignment) override {
-        m_upstream->deallocate(p, bytes, alignment);
+        pool->deallocate(p, bytes, alignment);
     }
 
     bool do_is_equal(const std::pmr::memory_resource& other) const noexcept override {
         // 监控内存使用
-        return other.is_equal(*m_upstream);
+        return other.is_equal(*pool);
     }
 
 private:
-    static std::unique_ptr<MemoryPool> instance;
-    std::unique_ptr<MemoryPoolImpl>    m_upstream;
+    std::unique_ptr<detail::MemoryPoolImpl> pool;
 };
 
 }  // namespace ExCCCRender::Platform::MemoryPool
