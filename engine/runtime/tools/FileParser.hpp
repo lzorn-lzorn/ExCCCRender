@@ -13,54 +13,54 @@ public:
     FileParser() = delete;
 
     template <String _Ty>
-    explicit FileParser(FilePath<_Ty> absolute_file_path) : absolute_file_path(std::string(absolute_file_path)) {
-        _init();
+    explicit FileParser(FilePath<_Ty> absolute_file_path) : m_absolute_file_path(std::string(absolute_file_path)) {
+        init();
     }
 
     template <String _Ty>
     explicit FileParser(FilePath<_Ty> file_path, FilePath<_Ty> file_name)
-        : file_path(std::string(file_path)), file_name(std::string(file_name)) {
-        _init();
+        : m_file_path(std::string(file_path)), m_file_name(std::string(file_name)) {
+        init();
     }
 
     virtual ~FileParser() {
-        file_stream.close();
+        m_file_stream.close();
     };
 
     virtual bool                     Loader();
     virtual std::vector<std::string> GetFileContents();
 
     virtual std::string GetFilePath() const {
-        return file_path;
+        return m_file_path;
     }
 
     virtual std::string GetFileName() const {
-        return file_name;
+        return m_file_name;
     }
 
     virtual std::string GetFileExtension() const {
-        return file_extension;
+        return m_file_extension;
     }
 
     virtual std::string GetFullFilePath() const {
-        return absolute_file_path;
+        return m_absolute_file_path;
     }
 
 private:
-    void _init() {
-        _path_parser();
-        _extension_parser();
+    void init() {
+        path_parser();
+        extension_parser();
     }
 
-    void _path_parser();       // 路径解析
-    void _extension_parser();  // 扩展名解析
+    void path_parser();       // 路径解析
+    void extension_parser();  // 扩展名解析
 private:
-    std::vector<char> buffer;
-    std::fstream      file_stream{};
-    std::string       file_path{""};
-    std::string       file_name{""};
-    std::string       file_extension{""};
-    std::string       absolute_file_path{""};  // absolute_file_path = file_path + file_name
+    std::vector<char> m_buffer;
+    std::fstream      m_file_stream{};
+    std::string       m_file_path{""};
+    std::string       m_file_name{""};
+    std::string       m_file_extension{""};
+    std::string       m_absolute_file_path{""};  // absolute_file_path = file_path + file_name
 };
 
 }  // namespace ExCCCRender::Tools

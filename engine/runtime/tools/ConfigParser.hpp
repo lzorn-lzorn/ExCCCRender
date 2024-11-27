@@ -48,6 +48,6 @@ private:
     void clear_annotation(std::string&) const;
 
 private:
-    std::vector<detail::IniItem> ConfigInfo;
+    std::vector<detail::IniItem> m_ConfigInfo;
 };
 }  // namespace ExCCCRender::Tools

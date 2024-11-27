@@ -14,8 +14,8 @@ void MemoryPoolImpl::init_pool_table() {
     auto                              table_size = block_size_table.size();
     for (size_t i = 0; i < table_size; i++)
         try {
-            pools[i] = pool_table_allocator.allocate(1);
-            std::construct_at(pools[i], block_size_table[i], block_number_table[i]);
+            m_pools[i] = pool_table_allocator.allocate(1);
+            std::construct_at(m_pools[i], block_size_table[i], block_number_table[i]);
         } catch (const std::bad_alloc& e) {
             std::cerr << "Memory allocation failed: " << e.what() << std::endl;
             destory();
@@ -23,9 +23,9 @@ void MemoryPoolImpl::init_pool_table() {
 }
 
 void MemoryPoolImpl::destory() {
-    auto size = pools.size();
+    auto size = m_pools.size();
     for (size_t i = 0; i < size; i++) {
-        pools[i]->~PoolTable();
+        m_pools[i]->~PoolTable();
     }
 }
 
@@ -35,7 +35,7 @@ void MemoryPoolImpl::destory() {
 void PoolTable::init_block() try {
     std::allocator<detail::MemoryBlock> memory_block_allocator;
     detail::MemoryBlock*                root = memory_block_allocator.allocate(1);
-    std::construct_at(root, size, nullptr, nullptr);
+    std::construct_at(root, m_size, nullptr, nullptr);
     // available_list 节点本身作为root节点存有当前链表的大小信息
     size_t* cur_size = static_cast<size_t*>(available_list->data);
     *cur_size        = 0;
@@ -45,13 +45,13 @@ void PoolTable::init_block() try {
     detail::MemoryBlock* head = root;
     detail::MemoryBlock* tail = root;
     // 设置 []-> <-[]
-    for (size_t i = 0; i < available_size - 1; i++) {
+    for (size_t i = 0; i < m_available_size - 1; i++) {
         auto tmp_node = memory_block_allocator.allocate(1);
-        std::construct_at(tmp_node, size, nullptr, nullptr);
+        std::construct_at(tmp_node, m_size, nullptr, nullptr, available_list);
         tail->next     = tmp_node;
         tmp_node->prev = tail;
         tail           = tmp_node;
-        *cur_size++;
+        (*cur_size)++;
     }
     // 最后设置循环链表的头尾指针
     head->prev = tail;
@@ -65,7 +65,7 @@ void PoolTable::init_block() try {
 /*
     内存池初始化检测:
 */
-bool PoolTable::check() const {
+bool PoolTable::Check() const {
     MemoryBlock* check_next_ptr = available_list;
     MemoryBlock* check_prev_ptr = available_list;
     size_t       table_size     = 0;

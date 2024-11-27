@@ -25,12 +25,55 @@ namespace detail {
 using _Block_Size = size_t;
 
 struct MemoryBlock {
-    void*        data;  // 指向内存空间的链表
+    bool         valid;   // 是否有效, 即是否存在使用者
+    void*        data;    // 指向内存空间的链表
+    void*        father;  // 记录使用者
     MemoryBlock* next;
     MemoryBlock* prev;
 
-    MemoryBlock(size_t size, MemoryBlock* next = nullptr, MemoryBlock* prev = nullptr) : next(next), prev(prev) {
+    enum class state {
+        // 有效状态, 异常状态, 错误状态
+        VALID,
+        EXCEPTION,
+        ERROR
+    };
+
+    MemoryBlock(size_t size, MemoryBlock* next = nullptr, MemoryBlock* prev = nullptr, void* father = nullptr)
+        : next(next), prev(prev), father(father) {
         data = malloc(size);
+        if (father) {
+            valid = true;
+        } else {
+            valid = false;
+        }
+    }
+
+    /*
+        内存位于 available_list 所有的内存块的 father 均为 available_list
+        内存位于 assigned_list 所有的内存块的 father 均为 对应引用它的位置
+            - 既有 father 也有 valid 位, 说明该内存块正在被使用
+            - father 和 valid 不一致时, 说明处于异常状态, 根据 father 重新设置 valid
+            - father 和 valid 分别是 nullptr 和 false 时, 说明该内存处于野指针状态
+    */
+    state Check() {
+        if (father || valid) {
+            return state::VALID;
+        } else if (father || !valid) {
+            // father 存在, 但是valid位为无效位置
+            valid = true;
+            return state::EXCEPTION;
+        } else if (!father || valid) {
+            valid = false;
+            return state::EXCEPTION;
+        } else {
+            return state::ERROR;
+        }
+    }
+
+    MemoryBlock& Set(void* father, bool valid = true) {
+        this->father = father;
+        this->valid  = valid;
+        return *this;
     }
 
     ~MemoryBlock() {
@@ -47,7 +90,7 @@ public:
 
 public:
     PoolTable(_Block_Size size, size_t number)
-        : available_list(nullptr), assigned_list(nullptr), available_size(number), assigned_size(0), size(size) {
+        : available_list(nullptr), assigned_list(nullptr), m_available_size(number), m_assigned_size(0), m_size(size) {
         init_block();
     }
 
@@ -62,29 +105,29 @@ public:
     }
 
     size_t GetAvailableSize() const noexcept {
-        return available_size;
+        return m_available_size;
     }
 
     size_t GetAssignedSize() const noexcept {
-        return assigned_size;
+        return m_assigned_size;
     }
 
-    bool check() const;
+    bool Check() const;
 
 private:
     void init_block();
     void destory();
 
 private:
-    _Block_Size size;
-    size_t      available_size;
-    size_t      assigned_size;
+    _Block_Size m_size;
+    size_t      m_available_size;
+    size_t      m_assigned_size;
 };
 
 class MemoryPoolImpl : public std::pmr::memory_resource {
 public:
     explicit MemoryPoolImpl(std::pmr::memory_resource* upstream = std::pmr::get_default_resource())
-        : upstream_allocator(upstream) {
+        : m_upstream_allocator(upstream) {
         set_size_table();
         init_pool_table();
     }
@@ -104,9 +147,9 @@ public:
     }
 
     bool check() const {
-        auto size = pools.size();
+        auto size = m_pools.size();
         for (size_t i = 0; i < size; ++i) {
-            if (!pools[i]->check()) {
+            if (!m_pools[i]->Check()) {
                 return false;
             }
         }
@@ -114,8 +157,8 @@ public:
     }
 
 private:
-    std::pmr::memory_resource* upstream_allocator;  // 封装系统原始 malloc
-    std::array<PoolTable*, 9>  pools;
+    std::pmr::memory_resource* m_upstream_allocator;  // 封装系统原始 malloc
+    std::array<PoolTable*, 9>  m_pools;
 
 private:
     void set_size_table();  // 使用 block_size_table 初始化内存池
@@ -146,32 +189,40 @@ public:
 
     ~MemoryPool() {
         // 析构资源
-        pool = nullptr;
+        m_pool = nullptr;
+    }
+
+    void* allocate(size_t bytes, size_t aligment = alignof(std::max_align_t)) {
+        return nullptr;
+    }
+
+    void* deallocate(void* p, size_t bytes, size_t aligment = alignof(std::max_align_t)) {
+        return nullptr;
     }
 
 private:
     void InitMemoryPool() {
-        pool = std::make_unique<detail::MemoryPoolImpl>();
+        m_pool = std::make_unique<detail::MemoryPoolImpl>();
     }
 
     // 只是负责监控内存而已
     void* do_allocate(std::size_t bytes, std::size_t alignment) override {
-        void* ptr = pool->allocate(bytes, alignment);
+        void* ptr = m_pool->allocate(bytes, alignment);
         // 监控内存使用
         return ptr;
     }
 
     void do_deallocate(void* p, size_t bytes, size_t alignment) override {
-        pool->deallocate(p, bytes, alignment);
+        m_pool->deallocate(p, bytes, alignment);
     }
 
     bool do_is_equal(const std::pmr::memory_resource& other) const noexcept override {
         // 监控内存使用
-        return other.is_equal(*pool);
+        return other.is_equal(*m_pool);
     }
 
 private:
-    std::unique_ptr<detail::MemoryPoolImpl> pool;
+    std::unique_ptr<detail::MemoryPoolImpl> m_pool;
 };
 
 }  // namespace ExCCCRender::Platform::MemoryPool

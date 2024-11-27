@@ -63,7 +63,7 @@ void ConfigParser::Parser() {
             std::cerr << "error string is : {" << line << "}" << std::endl;
             throw std::invalid_argument("Invalid config");
         }
-        this->ConfigInfo.push_back(item);
+        this->m_ConfigInfo.push_back(item);
         item = {};
     }
 }
@@ -107,10 +107,10 @@ std::optional<detail::_Value_Type> ConfigParser::parser_config_value(const std::
 }
 
 void ConfigParser::PrintConfigInfo() const {
-    if (ConfigInfo.empty()) {
+    if (m_ConfigInfo.empty()) {
         std::cout << "Config is empty" << std::endl;
     }
-    for (const auto& item : ConfigInfo) {
+    for (const auto& item : m_ConfigInfo) {
         std::cout << std::format(" Config-{}, Key:{}, Value: ", item.config_name, item.key);
         print_config_value(item.value);
         std::cout << std::endl;
