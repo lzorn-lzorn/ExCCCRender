@@ -15,8 +15,8 @@ public:
     virtual void Destroy();
 
     static VulkanGraphicsAPI& CreateInstance() {
-        assert(instance_ == nullptr);
-        return *instance_;
+        assert(instance == nullptr);
+        return *instance;
     }
 
 public:
@@ -24,23 +24,23 @@ public:
         std::optional<uint32_t> graphics_queue;
     };
 
-    vk::Instance       instance;
-    vk::PhysicalDevice physical_device;
-    vk::Device         device;
-    QueueFamilyIndices queues_family_indices;
-    vk::Queue          graphics_queue;
+    vk::Instance       vk_instance;
+    vk::PhysicalDevice vk_physical_device;
+    vk::Device         vk_device;
+    QueueFamilyIndices vk_queues_family_indices;
+    vk::Queue          vk_graphics_queue;
 
 private:
     VulkanGraphicsAPI();
 
-    void _create_instance();
-    void _pickup_physical_device();
-    void _create_device();
-    void _query_queue_family_indices();
-    void _get_queue();
+    void create_instance();
+    void pickup_physical_device();
+    void create_device();
+    void query_queue_family_indices();
+    void get_queue();
 
 private:
-    static std::unique_ptr<VulkanGraphicsAPI> instance_;
+    static std::unique_ptr<VulkanGraphicsAPI> instance;
 };
 
 }  // namespace ExCCCRender::Platform
