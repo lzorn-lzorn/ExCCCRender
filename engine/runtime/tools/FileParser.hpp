@@ -23,6 +23,14 @@ public:
         init();
     }
 
+    FileParser(const FileParser&) = delete;
+
+    FileParser(FileParser&&) noexcept;
+
+    FileParser& operator=(const FileParser&) = delete;
+
+    FileParser& operator=(FileParser&&) noexcept;
+
     virtual ~FileParser() {
         m_file_stream.close();
     };

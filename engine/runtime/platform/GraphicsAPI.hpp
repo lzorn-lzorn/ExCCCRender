@@ -8,7 +8,7 @@ public:
     GraphicsAPI()          = default;
     virtual ~GraphicsAPI() = default;
 
-    virtual void Init() {
+    virtual void Initialize() {
     }
 
     virtual void Destroy() {

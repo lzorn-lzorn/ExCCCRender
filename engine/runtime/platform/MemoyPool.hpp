@@ -95,9 +95,11 @@ public:
     }
 
     void* allocate(size_t bytes, size_t aligment = alignof(std::max_align_t)) {
+        return nullptr;
     }
 
     void* deallocate(void* p, size_t bytes, size_t aligment = alignof(std::max_align_t)) {
+        return nullptr;
     }
 
     ~PoolTable() {

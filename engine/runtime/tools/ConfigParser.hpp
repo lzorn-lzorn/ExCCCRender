@@ -26,6 +26,28 @@ public:
     explicit ConfigParser(FilePath<_Ty> file_path, FilePath<_Ty> file_name) : FileParser(file_path, file_name) {
     }
 
+    ConfigParser(const ConfigParser&) = delete;
+
+    ConfigParser(ConfigParser&& other)
+        : FileParser(std::move(other)),                  // 调用基类的移动构造函数
+          m_ConfigInfo(std::move(other.m_ConfigInfo)) {  // 转移成员变量
+        // 移动完成后，清空源对象的状态
+        other.m_ConfigInfo.clear();
+    }
+
+    ConfigParser& operator=(const ConfigParser&) = delete;
+
+    ConfigParser& operator=(ConfigParser&& other) {
+        if (this != &other) {                              // 避免自赋值
+            FileParser::operator=(std::move(other));       // 调用基类的移动赋值运算符
+            m_ConfigInfo = std::move(other.m_ConfigInfo);  // 转移成员变量
+
+            // 清空源对象的状态
+            other.m_ConfigInfo.clear();
+        }
+        return *this;
+    }
+
     virtual ~ConfigParser() override {};
     virtual void Parser();
     virtual void PrintConfigInfo() const;

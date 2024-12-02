@@ -6,7 +6,7 @@ class AbstractGraphicsAPI {
 public:
     AbstractGraphicsAPI();
     virtual ~AbstractGraphicsAPI() = 0;
-    virtual void Init()            = 0;
+    virtual void Initialize()      = 0;
     virtual void Destroy()         = 0;
 };
 

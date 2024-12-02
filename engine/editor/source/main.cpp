@@ -1,9 +1,17 @@
 #include <iostream>
-
-#include "../../runtime/tools/FileParser.hpp"
+#include "../../runtime/tools/ConfigParser.hpp"
 
 int main() {
-    ExCCCRender::Tools::FileParser parser("include/test.txt");
-    std::cout << parser.GetFileName() << std::endl;
+    ExCCCRender::Tools::ConfigParser parser(
+        "C:\\Program User\\code\\ExCCCRender\\engine\\configs\\GrapicsAPIConfig.ini");
+    std::cout << parser.GetFullFilePath() << std::endl;
+    try {
+        parser.Loader();
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+    parser.Parser();
+    std::cout << "Parser Over" << std::endl;
+    parser.PrintConfigInfo();
     return 0;
 }
