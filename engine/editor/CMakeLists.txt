@@ -4,19 +4,20 @@ file(GLOB EDITOR_HEADERS CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/include/*
 file(GLOB EDITOR_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 
 # 用于IDE的分组管理
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${EDITOR_HEADERS} ${EDITOR_SOURCES} ${EDITOR_RESOURCE})
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${EDITOR_HEADERS} ${EDITOR_SOURCES})
+
+add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
 
 add_executable(${TARGET_NAME} ${EDITOR_HEADERS} ${EDITOR_SOURCES})
 
-target_include_directories(${TARGET_NAME} PUBLIC 
+target_include_directories(${TARGET_NAME} PUBLIC
     $<BUILD_INTERFACE:${Vulkan_INCLUDE_DIRS}> # 自动导入 find_package 结果
-    $<BUILD_INTERFACE:${VULKAN_SDK}/include>  # 手动补充 Vulkan SDK 的路径
+    $<BUILD_INTERFACE:${VULKAN_SDK}/include> # 手动补充 Vulkan SDK 的路径
     $<BUILD_INTERFACE:${ENGINE_ROOT_DIR}>
     $<BUILD_INTERFACE:${ENGINE_ROOT_DIR}/runtime>
     $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/glm>
     $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/glfw>
     $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/stb>
-    $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/assimp/include>
     $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/spdlog/include>
     $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/imgui>
 )
@@ -29,6 +30,4 @@ set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/WX->")
 
 target_link_libraries(${TARGET_NAME} ExCCCRuntime)
-
-
-
+target_link_libraries(${TARGET_NAME} SDL3::SDL3)
