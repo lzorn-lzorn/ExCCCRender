@@ -1,15 +1,24 @@
-set(ENGINE_ROOT_DIR "${PICCOLO_ROOT_DIR}/engine")
-set(THIRD_PARTY_DIR "${ENGINE_ROOT_DIR}/thirdparty")
-set(ENGINE_ASSET_DIR "/asset")
+aux_source_directory(./src ENGINE_SOURCES)
+file(GLOB_RECURSE
+    ENGINE_HEADERS
+    ${ExCCCRender_INCLUDE_DIR}/*.h
+    ${ExCCCRender_INCLUDE_DIR}/*.hpp
+)
+file(GLOB_RECURSE
+    ENGINE_INTERFACES
+    ${ENGINE_DIR}/*.hpp
+)
+
+message("Debug Info Src:${ENGINE_SOURCES}")
+message("Debug Info Include:${ENGINE_HEADERS}")
 
 find_package(Vulkan REQUIRED)
 find_package(OpenGL REQUIRED)
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    add_compile_options("/MP")
-    set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT PiccoloEditor)
-endif()
+# 为了Test 可以将整个引擎打包为静态链接库, 在Test/ 进行测试
+# add_library(${PROJECT_NAME} STATIC ${ENGINE_SOURCES})
+add_executable(${PROJECT_NAME} PUBLIC ${ENGINE_SOURCES})
 
-add_subdirectory(thirdparty)
-add_subdirectory(runtime)
-add_subdirectory(editor)
+target_include_directories(${PROJECT_NAME} PUBLIC ${ENGINE_HEADERS})
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+target_precompile_headers(${PROJECT_NAME} PUBLIC ./include/pch.hpp)
