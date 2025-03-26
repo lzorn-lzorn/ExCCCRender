@@ -1,24 +1,15 @@
-set(third_party_folder "ThirdParty") # 设置项目生成后的文件夹名称 "ThirdParty"
+cmake_minimum_required(VERSION 3.10)
+project(thirdparty)
 
-# # if(NOT TARGET imgui)
-# # include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/imgui.cmake)
-# # set_target_properties(imgui PROPERTIES FOLDER ${third_party_folder}/imgui) # 生成之后imgui在"ThirdParty/imgui"中
-# # endif()
-# if(NOT TARGET spdlog)
-# option(SPDLOG_BUILD_EXAMPLE "" OFF)
-# option(SPDLOG_INSTALL "" OFF)
-# add_subdirectory(spdlog)
-# set_target_properties(spdlog PROPERTIES FOLDER ${third_party_folder}/spdlog)
-# endif()
+set(ENGINE_THIRDPARTY_CMAKE_DIR ${ExCCCRender_THIRDPARTY_DIR}/cmake)
+file(GLOB_RECURSE
+    ENGINE_THIRDPPARTY_INCLUDE
+    ${ExCCCRender_THIRDPARTY_DIR}/*.h
+    ${ExCCCRender_THIRDPARTY_DIR}/*.hpp
+)
 
-# if(NOT TARGET stb)
-# file(GLOB stb_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/stb/*.h")
-# add_library(stb INTERFACE ${stb_sources})
-# target_include_directories(stb INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/stb)
-# endif()
+add_library(thirdparty SHARED dummy.cpp)
+target_include_directories(thirdparty PUBLIC ${ENGINE_THIRDPPARTY_INCLUDE})
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
-# if(NOT TARGET assimp)
-# add_subdirectory(assimp)
-# set_target_properties(assimp PROPERTIES FOLDER ${third_party_folder}/assimp)
-# set_target_properties(uninstall PROPERTIES FOLDER ${third_party_folder}/assimp)
-# endif()
+# include(${ENGINE_THIRDPARTY_CMAKE_DIR}/find_re2.cmake)

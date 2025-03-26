@@ -1,7 +1,7 @@
 #include <iostream>
+#include <string>
 
+int main() {
 
-int main(){
-    std::cout << "Hello ExCCCRender!";
     return 0;
 }
