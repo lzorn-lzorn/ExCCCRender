@@ -1,4 +1,3 @@
-
 if(NOT TARGET glfw)
     option(GLFW_BUILD_EXAMPLES "" OFF)
     option(GLFW_BUILD_TESTS "" OFF)

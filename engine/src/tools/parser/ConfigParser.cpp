@@ -1,7 +1,8 @@
-#include "../../runtime/tools/ConfigParser.hpp"
-#include "../../runtime/tools/RegexHelper.hpp"
-#include "../../runtime/tools/debug.hpp"
-
+#include "pch.hpp"
+#include "tools/RegexHelper.hpp"
+#include "tools/debug.hpp"
+#include "tools/parser/ConfigParser.hpp"
+#include "tools/parser/ConfigParser.hpp"
 namespace ExCCCRender::Tools {
 void ConfigParser::Parser() {
     std::vector<std::string> lines = GetFileContents();

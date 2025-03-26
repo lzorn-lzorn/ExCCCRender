@@ -1,5 +1,7 @@
-#include "../../runtime/tools/FileParser.hpp"
-#include "../../runtime/tools/debug.hpp"
+#include "pch.hpp"
+#include "tools/RegexHelper.hpp"
+#include "tools/debug.hpp"
+#include "tools/parser/FileParser.hpp"
 
 namespace ExCCCRender::Tools {
 FileParser::FileParser(FileParser&& other) noexcept

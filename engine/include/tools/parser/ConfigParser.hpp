@@ -1,5 +1,6 @@
-#include "../../runtime/tools/FileParser.hpp"
-#include "../../runtime/stdheader.h"
+#pragma once
+#include "tools/FileParser.hpp"
+#include "pch.hpp"
 
 namespace ExCCCRender::Tools {
 namespace detail {

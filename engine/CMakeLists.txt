@@ -1,5 +1,10 @@
+# aux_source_directory(${ExCCCRender_SOURCE_DIR}/ ENGINE_SOURCES)
 
-aux_source_directory(${ExCCCRender_SOURCE_DIR} ENGINE_SOURCES)
+file(GLOB_RECURSE
+    ENGINE_SOURCES
+    ${ExCCCRender_SOURCE_DIR}/*.cpp
+    ${ExCCCRender_SOURCE_DIR}/*.c
+)
 
 file(GLOB_RECURSE
     ENGINE_HEADERS
@@ -12,13 +17,17 @@ file(GLOB_RECURSE
     ${ExCCCRender_INCLUDE_DIR}/*.hpp
 )
 
-message("Debug Info ENGINE_HEADERS: ${ENGINE_HEADERS}")
 find_package(Vulkan REQUIRED)
 find_package(OpenGL REQUIRED)
 
-add_executable(${PROJECT_NAME} ${ENGINE_SOURCES})
+# message("ExCCCRender_SOURCE_DIR: ${ExCCCRender_SOURCE_DIR}")
+# message("ExCCCRender_INCLUDE_DIR: ${ExCCCRender_INCLUDE_DIR}")
+# message("ENGINE_SOURCES: ${ENGINE_SOURCES}")
+# message("ENGINE_HEADERS: ${ENGINE_HEADERS}")
+# message("PROJECT_NAME: ${PROJECT_NAME}")
+add_executable(${PROJECT_NAME} ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${ENGINE_HEADERS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${ExCCCRender_INCLUDE_DIR})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 target_precompile_headers(${PROJECT_NAME} PUBLIC ${ExCCCRender_INCLUDE_DIR}/pch.hpp)
 

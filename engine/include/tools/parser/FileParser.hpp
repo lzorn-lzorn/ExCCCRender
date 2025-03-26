@@ -1,4 +1,5 @@
-#include "../../runtime/stdheader.h"
+#pragma once
+#include "pch.hpp"
 
 namespace ExCCCRender::Tools {
 template <typename _Ty>

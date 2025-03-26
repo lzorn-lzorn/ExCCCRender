@@ -1,4 +1,5 @@
-#include "../../runtime/stdheader.h"
+#pragma once
+#include "pch.hpp"
 
 namespace ExCCCRender::Tools {  // 定义 debug 宏
 #ifdef NDEBUG                   // release

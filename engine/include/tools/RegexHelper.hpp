@@ -1,4 +1,5 @@
-#include "../../runtime/stdheader.h"
+#pragma once
+#include "pch.hpp"
 
 namespace ExCCCRender::Tools::RegexPattern {
 using _RegexPattern = std::string;
