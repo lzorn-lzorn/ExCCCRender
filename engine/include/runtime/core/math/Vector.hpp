@@ -282,6 +282,7 @@ namespace ExCCCRender::Tools::Math{
         auto Dot(const Vector3D<OtherTy>& other) const -> std::common_type_t<inner_type, OtherTy>{
             return x * other.X() + y * other.Y() + z * other.Z();
         }
+        // note: 只有三维向量有叉积
         template <typename OtherTy>
         auto Cross(const Vector3D<OtherTy>& other) const
           -> Vector3D<std::common_type_t<inner_type, OtherTy>>{
@@ -354,7 +355,9 @@ namespace ExCCCRender::Tools::Math{
                 });
                 return ret;
             }
-            bool is_unit_vector() const noexcept{}
+            bool is_unit_vector() const noexcept{
+                return square_sum() == 1;
+            }
             bool is_axis() const noexcept{
                 size_t count = 0;
                 static_for<N>([&](auto i) {
@@ -369,23 +372,34 @@ namespace ExCCCRender::Tools::Math{
             bool is_parallel_with(const vector_n& vec){}
             bool is_vertical_with(const vector_n& vec){}
         public:
-            void normalize() {}
+            void normalize() {
+                if (is_unit_vector()){
+                    return *this;
+                }
+                auto square_ = square_sum();
+                if(square_ == 1){
+                    return *this;
+                }
+                auto size_ = std::sqrt(square_);
+                static_for<N>([&](size_t i){
+                    p_coordinates[i] /= size_;
+                });
+            }
             auto dot(const vector_n& vec){
                 ResultType res{};
                 static_for<N>([&](size_t i){
                     res += p_coordinates[i] * vec.p_coordinates[i];
                 });
             }
-            vector_n<Ty, N> cross(const vector_n& vec){}
             double length() const noexcept{
                 if (is_unit_vector()){
                     return 1.0;
                 }
-                return std::sqrt(square());
+                return std::sqrt(square_sum());
             }
 
             // * 返回 x*x+y*y+z*z
-            auto square() const noexcept{
+            auto square_sum() const noexcept{
                 ResultType res = 0;
                 static_for<N>([&](size_t i){
                     res += p_coordinates[i] * p_coordinates[i];
