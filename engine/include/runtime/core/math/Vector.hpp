@@ -1,10 +1,12 @@
 #pragma once
 #include <exception>
 #include <cmath>
+#include <initializer_list>
 #include <limits>
 #include <cstdint>
 #include <stdexcept>
 #include <type_traits>
+#include "tools/static_for.hpp"
 /*
  * 以下是Vector(向量的定义)
  * 本质上Vector只有 2D, 3D, 4D
@@ -278,7 +280,7 @@ namespace ExCCCRender::Tools::Math{
         }
         template <typename OtherTy>
         auto Dot(const Vector3D<OtherTy>& other) const -> std::common_type_t<inner_type, OtherTy>{
-            return x * other.Y() + y * other.Y() + z * other.Z();
+            return x * other.X() + y * other.Y() + z * other.Z();
         }
         template <typename OtherTy>
         auto Cross(const Vector3D<OtherTy>& other) const
@@ -309,4 +311,89 @@ namespace ExCCCRender::Tools::Math{
     private:
         inner_type x{}, y{}, z{};
     };
+
+    namespace detail {
+        template <Arithmetic Ty, size_t N>
+        struct vector_n{
+            // * 防止溢出类型
+            using ResultType = std::conditional_t<std::is_integral_v<Ty>,
+                    std::conditional_t<(sizeof(Ty) <= sizeof(int16_t)),
+                        int16_t,
+                        std::conditional_t<(sizeof(Ty) == sizeof(int32_t)),
+                            int32_t,
+                            std::conditional_t<(sizeof(Ty) == sizeof(int64_t)),
+                                int64_t,
+                                int64_t // int64 为最高
+                            >
+                        >
+                    >,
+                    std::conditional_t<std::is_floating_point_v<Ty>,
+                        long double,
+                        Ty
+                    >
+                >;
+        public:
+            explicit vector_n(std::initializer_list<Ty> list){
+                p_coordinates = std::array<Ty, N>(list.begin(), list.end());
+            }
+            vector_n(const vector_n& other){
+
+            }
+            vector_n(vector_n&& other){}
+            vector_n& operator=(const vector_n& other){}
+            vector_n& operator=(vector_n&& other){}
+            bool operator==(const vector_n& other){}
+        public:
+            bool is_zero_vector() const noexcept{
+                bool ret = true;
+                auto epsilon = std::numeric_limits<Ty>::epsilon();
+                static_for<0, N>([&](size_t i){
+                    if constexpr (p_coordinates[i] <= epsilon){
+                        ret = false;
+                    }
+                });
+                return ret;
+            }
+            bool is_unit_vector() const noexcept{}
+            bool is_axis() const noexcept{
+                size_t count = 0;
+                static_for<N>([&](auto i) {
+                    if constexpr(p_coordinates[i] == 1) {
+                        ++count;
+                    } else if (p_coordinates[i] != 0) {
+                        count = 2; // 直接标记为不符合条件
+                    }
+                });
+                return count == 1;
+            }
+            bool is_parallel_with(const vector_n& vec){}
+            bool is_vertical_with(const vector_n& vec){}
+        public:
+            void normalize() {}
+            auto dot(const vector_n& vec){
+                ResultType res{};
+                static_for<N>([&](size_t i){
+                    res += p_coordinates[i] * vec.p_coordinates[i];
+                });
+            }
+            vector_n<Ty, N> cross(const vector_n& vec){}
+            double length() const noexcept{
+                if (is_unit_vector()){
+                    return 1.0;
+                }
+                return std::sqrt(square());
+            }
+
+            // * 返回 x*x+y*y+z*z
+            auto square() const noexcept{
+                ResultType res = 0;
+                static_for<N>([&](size_t i){
+                    res += p_coordinates[i] * p_coordinates[i];
+                });
+                return res;
+            }
+        public:
+            std::array<Ty, N> p_coordinates;
+        };
+    }
 };
