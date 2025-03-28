@@ -1,49 +1,50 @@
 #pragma once
-#include <type_traits>
-#include "Vector.hpp"
-#include "pch.hpp"
-#include "runtime/core/math/Vector.hpp"
+#include "runtime/core/traits.hpp"
+#include "Vector.h"
 
-namespace ExCCCRender::Tools::Math {
-    template <Arithmetic T, Arithmetic U>
-    bool IsParallel(const Vector3D<T>& v1, const Vector3D<U>& v2){
-        return v1.IsParallelWith(v2);
-    }
-    template <Arithmetic T, Arithmetic U>
-    bool IsParallel(const Vector2D<T>& v1, const Vector2D<U>& v2){
-        return v1.IsParallelWith(v2);
-    }
+namespace ExCCCRender::Core::Math {
+    double Dot(const Vector2D&, const Vector2D&);
+    double Dot(const Vector3D&, const Vector3D&);
+    double Dot(const Vector4D&, const Vector4D&);
+    // 只有三维向量才有叉积
+    Vector3D Cross(const Vector3D&, const Vector3D&);
 
-    template <Arithmetic T, Arithmetic U>
-    bool IsVertical(const Vector3D<T>& v1, const Vector3D<U>& v2){
-        return v1.IsVerticalWith(v2);
-    }
-    template <Arithmetic T, Arithmetic U>
-    bool IsVertical(const Vector2D<T>& v1, const Vector2D<U>& v2){
-        return v1.IsVerticalWith(v2);
-    }
+    bool IsParallel(const Vector3D&, const Vector3D&);
+    bool IsParallel(const Vector2D&, const Vector2D&);
+    bool IsVertical(const Vector3D&, const Vector3D&);
+    bool IsVertical(const Vector2D&, const Vector2D&);
 
-    template <Arithmetic T, Arithmetic U>
-    auto Dot(const Vector3D<T>& v1, const Vector3D<U>& v2)
-        -> std::common_type_t<T, U>{
-        return v1.Dot(v2);
-    }
+    Vector2D operator+(const Vector2D&, const Vector2D&);
+    Vector3D operator+(const Vector3D&, const Vector3D&);
+    Vector4D operator+(const Vector4D&, const Vector4D&);
 
-    template <Arithmetic T, Arithmetic U>
-    auto Dot(const Vector2D<T> v1, const Vector2D<U> v2)
-        -> std::common_type_t<T, U>{
-        return v1.Dot(v2);
-    }
+    Vector2D operator-(const Vector2D&, const Vector2D&);
+    Vector3D operator-(const Vector3D&, const Vector3D&);
+    Vector4D operator-(const Vector4D&, const Vector4D&);
 
-    template <Arithmetic T, Arithmetic U>
-    auto Cross(const Vector3D<T>& v1, const Vector3D<U>& v2)
-        -> Vector3D<std::common_type_t<T, U>>{
-        return v1.Cross(v2);
-    }
+    template <Arithmetic Ty>
+    Vector2D operator*(const Ty, const Vector2D&);
+    template <Arithmetic Ty>
+    Vector2D operator*(const Vector2D&, const Ty);
+    template <Arithmetic Ty>
+    Vector3D operator*(const Ty, const Vector3D&);
+    template <Arithmetic Ty>
+    Vector3D operator*(const Vector3D&, const Ty);
+    template <Arithmetic Ty>
+    Vector4D operator*(const Ty, const Vector4D&);
+    template <Arithmetic Ty>
+    Vector4D operator*(const Vector4D&, const Ty);
 
-    template <Arithmetic T, Arithmetic U>
-    auto Cross(const Vector2D<T>& v1, const Vector2D<U>& v2)
-        -> Vector2D<std::common_type_t<T, U>>{
-        return v1.Cross(v2);
-    }
+    template <Arithmetic Ty>
+    Vector2D Dot(const Ty, const Vector2D&);
+    template <Arithmetic Ty>
+    Vector2D Dot(const Vector2D&, const Ty);
+    template <Arithmetic Ty>
+    Vector3D Dot(const Ty, const Vector3D&);
+    template <Arithmetic Ty>
+    Vector3D Dot(const Vector3D&, const Ty);
+    template <Arithmetic Ty>
+    Vector4D Dot(const Ty, const Vector4D&);
+    template <Arithmetic Ty>
+    Vector4D Dot(const Vector4D&, const Ty);
 }

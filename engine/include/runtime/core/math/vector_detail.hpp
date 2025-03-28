@@ -2,37 +2,22 @@
 #include <utility>
 #include "pch.hpp"
 #include "runtime/core/traits.hpp"
-namespace ExCCCRender::Tools::Math::detail {
-        template <Arithmetic Ty, size_t N>
+namespace ExCCCRender::Core::Math::detail {
+        template <size_t N>
         struct vector_n{
-            using value_type = Ty;
-            // * 防止溢出类型
-            using ResultType = std::conditional_t<std::is_integral_v<Ty>,
-                    std::conditional_t<(sizeof(Ty) <= sizeof(int16_t)),
-                        int16_t,
-                        std::conditional_t<(sizeof(Ty) == sizeof(int32_t)),
-                            int32_t,
-                            std::conditional_t<(sizeof(Ty) == sizeof(int64_t)),
-                                int64_t,
-                                int64_t // int64 为最高
-                            >
-                        >
-                    >,
-                    std::conditional_t<std::is_floating_point_v<Ty>,
-                        long double,
-                        Ty
-                    >
-                >;
         public:
-            explicit vector_n(std::initializer_list<Ty> list){
-                p_coordinates = std::array<Ty, N>(list.begin(), list.end());
+            explicit vector_n(std::initializer_list<float> list){
+                p_coordinates = std::array<float, N>(list.begin(), list.end());
             }
-            template <Arithmetic... Args, size_t... Index>
+            template <Arithmetic... Args>
             explicit vector_n(const Args&... args) : p_coordinates{}{
-                construct_helper(args..., std::make_index_sequence<N>{});
+                static_assert(sizeof...(Args) == N, "sizeof...(Args) != N, 参数数量与向量维度不符");
+                construct_helper(std::make_index_sequence<N>{}, args...);
             }
             vector_n(const vector_n& other){
-
+                static_for([&](size_t i){
+                    p_coordinates[i] = other.p_coordinates[i];
+                });
             }
             vector_n(vector_n&& other){
                 static_assert(p_coordinates.size() == other.p_coordinates.size(), "vector 要同一维度");
@@ -41,9 +26,13 @@ namespace ExCCCRender::Tools::Math::detail {
                 }
                 p_coordinates.swap(other.p_coordinates);
             }
-            vector_n& operator=(const vector_n& other){}
+            vector_n& operator=(const vector_n& other){
+                auto vec = other;
+                return vec;
+            }
             vector_n& operator=(vector_n&& other){}
             bool operator==(const vector_n& other){
+                static_assert(other.p_coordinates.size() == p_coordinates.size(), "向量维度不一致");
                 if (other.p_coordinates.size() != p_coordinates.size()){
                     return false;
                 }
@@ -56,7 +45,7 @@ namespace ExCCCRender::Tools::Math::detail {
         public:
             bool is_zero_vector() const noexcept{
                 bool ret = true;
-                auto epsilon = std::numeric_limits<Ty>::epsilon();
+                auto epsilon = std::numeric_limits<float>::epsilon();
                 static_for<0, N>([&](size_t i){
                     if constexpr (p_coordinates[i] <= epsilon){
                         ret = false;
@@ -92,11 +81,25 @@ namespace ExCCCRender::Tools::Math::detail {
                     p_coordinates[i] /= size_;
                 });
             }
-            auto dot(const vector_n& vec){
+            double dot(const vector_n& vec) const {
                 static_assert(vec.p_coordinates.size()==p_coordinates.size(), "Vector维度不一致");
-                ResultType res{};
+                double res{};
                 static_for<N>([&](size_t i){
                     res += p_coordinates[i] * vec.p_coordinates[i];
+                });
+                return res;
+            }
+            double dot(const vector_n& vec) {
+                static_assert(vec.p_coordinates.size()==p_coordinates.size(), "Vector维度不一致");
+                double res{};
+                static_for<N>([&](size_t i){
+                    res += p_coordinates[i] * vec.p_coordinates[i];
+                });
+                return res;
+            }
+            void proportionally_change(const float ratio){
+                static_for<N>([&](size_t i){
+                    p_coordinates[i] *= ratio;
                 });
             }
             double length() const noexcept{
@@ -107,18 +110,18 @@ namespace ExCCCRender::Tools::Math::detail {
             }
 
             // * 返回 x*x+y*y+z*z
-            auto square_sum() const noexcept{
-                ResultType res = 0;
+            double square_sum() const noexcept{
+                double res = 0;
                 static_for<N>([&](size_t i){
                     res += p_coordinates[i] * p_coordinates[i];
                 });
                 return res;
             }
         public:
-            std::array<Ty, N> p_coordinates;
+            std::array<float, N> p_coordinates;
         private:
             template <Arithmetic... Args, size_t... Index>
-            void construct_helper(const Args&... args, std::index_sequence<Index...>){
+            void construct_helper(std::index_sequence<Index...>, const Args&... args){
                 static_assert(sizeof...(Args) == N, "参数数量必须与数组长度一致");
                 ((p_coordinates[Index] = args), ...);
             }
