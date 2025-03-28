@@ -2,7 +2,9 @@
 namespace ExCCCRender::Tools {
     /*
      * 编译期for循环, 感谢小彭老师, 伟大无需多言
-     * Usage: static_for<Beg, End>([](){});
+     * Usage: static_for<Beg, End>([&](size_t i){
+     *    i 是 循环变量
+     * });
      * 其会在编译期将该 static_for 展开, 形成 End - Beg 行 [](){}
      */
     template <size_t Beg, size_t End, class Lambda>

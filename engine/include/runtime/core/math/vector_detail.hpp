@@ -1,4 +1,5 @@
 #pragma once
+#include <tuple>
 #include <utility>
 #include "pch.hpp"
 #include "runtime/core/traits.hpp"
@@ -30,7 +31,13 @@ namespace ExCCCRender::Core::Math::detail {
                 auto vec = other;
                 return vec;
             }
-            vector_n& operator=(vector_n&& other){}
+            vector_n& operator=(vector_n&& other){
+                if (other == *this){
+                    return *this;
+                }
+                *this->p_coordinates.swap(other.p_coordinates);
+                return *this;
+            }
             bool operator==(const vector_n& other){
                 static_assert(other.p_coordinates.size() == p_coordinates.size(), "向量维度不一致");
                 if (other.p_coordinates.size() != p_coordinates.size()){
@@ -42,7 +49,30 @@ namespace ExCCCRender::Core::Math::detail {
                 });
                 return  ret;
             }
+            void operator+=(const float number){
+                static_for<N>([&](size_t i){
+                    p_coordinates[i] += number;
+                });
+            }
+
         public:
+            template<Arithmetic... Args>
+            void mutli_add(const Args&... args){
+                static_assert(sizeof...(Args)==p_coordinates.size(), "参数数量要和向量维度保持一致");
+                [&]<std::size_t... Index>(std::index_sequence<Index...>){
+                    ((p_coordinates[Index]+=std::get<Index>(std::forward_as_tuple(args...))), ...);
+                }(std::make_index_sequence<N>());
+            }
+
+            void hadamard_product(const vector_n other){
+                static_assert(other.p_coordinates.size()==p_coordinates.size(), "两个向量维度保持一致");
+                static_for<N>([&](auto i){
+                    p_coordinates[i] *= other.p_coordinates[i];
+                });
+            }
+
+
+
             bool is_zero_vector() const noexcept{
                 bool ret = true;
                 auto epsilon = std::numeric_limits<float>::epsilon();
@@ -89,6 +119,7 @@ namespace ExCCCRender::Core::Math::detail {
                 });
                 return res;
             }
+
             double dot(const vector_n& vec) {
                 static_assert(vec.p_coordinates.size()==p_coordinates.size(), "Vector维度不一致");
                 double res{};
@@ -122,8 +153,11 @@ namespace ExCCCRender::Core::Math::detail {
         private:
             template <Arithmetic... Args, size_t... Index>
             void construct_helper(std::index_sequence<Index...>, const Args&... args){
-                static_assert(sizeof...(Args) == N, "参数数量必须与数组长度一致");
                 ((p_coordinates[Index] = args), ...);
+            }
+            template <Arithmetic... Args, size_t... Index>
+            void add_helper(const Args&... args, std::index_sequence<Index...>){
+                ((p_coordinates[Index] += args), ...);
             }
         };
     }

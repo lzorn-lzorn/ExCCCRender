@@ -16,6 +16,18 @@ namespace ExCCCRender::Core::Math{
         Vector2D& operator=(const Vector2D& vec) = default;
         Vector2D& operator=(Vector2D&& vec) = default;
         bool operator==(const Vector2D&);
+        Vector2D& operator+=(const Vector2D& other){
+            return vec_2.mutli_add(other.X(), other.Y()), *this;
+        }
+        Vector2D& operator-=(const Vector2D& other){
+            return vec_2.mutli_add(-other.X(), -other.Y()), *this;
+        }
+        Vector2D& operator+=(const float num){
+            return vec_2+=num, *this;
+        }
+        Vector2D& operator-=(const float num){
+            return vec_2+=(-num), *this;
+        }
     public:
         Vector2D& SetX(const float x=0.0f) noexcept{
             return vec_2.p_coordinates[0] = x, *this;
@@ -75,7 +87,19 @@ namespace ExCCCRender::Core::Math{
         Vector3D& operator=(const Vector3D& vec) = default;
         Vector3D& operator=(Vector3D&& vec) = default;
 
-        bool operator==(const Vector3D& vec) ;
+        bool operator==(const Vector3D& vec);
+        Vector3D& operator+=(const Vector3D& other){
+            return vec_3.mutli_add(other.X(), other.Y(), other.Z()), *this;
+        }
+        Vector3D& operator-=(const Vector3D& other){
+            return vec_3.mutli_add(-other.X(), -other.Y(), -other.Z()), *this;
+        }
+        Vector3D& operator+=(const float num){
+            return vec_3+=num, *this;
+        }
+        Vector3D& operator-=(const float num){
+            return vec_3+=(-num), *this;
+        }
     public:
         Vector3D& SetX(const float x){
             return vec_3.p_coordinates[0] = x, *this;
@@ -144,9 +168,20 @@ namespace ExCCCRender::Core::Math{
         Vector4D& operator=(const Vector4D& vec) = default;
         Vector4D& operator=(Vector4D&& vec) = default;
         bool operator==(const Vector4D&);
+        Vector4D& operator+=(const Vector4D& other){
+            return vec_4.mutli_add(other.X(), other.Y(), other.Z(), other.W()), *this;
+        }
+        Vector4D& operator-=(const Vector4D& other){
+            return vec_4.mutli_add(-other.X(), -other.Y(), -other.Z(), -other.W()), *this;
+        }
+        Vector4D& operator+=(const float num){
+            return vec_4+=num, *this;
+        }
+        Vector4D& operator-=(const float num){
+            return vec_4+=(-num), *this;
+        }
     public:
         Vector4D& SetX(const float x=float{}) {
-
             return vec_4.p_coordinates[0] = x, *this;
         }
         Vector4D& SetY(const float y=float{}) {
@@ -159,9 +194,9 @@ namespace ExCCCRender::Core::Math{
             return vec_4.p_coordinates[3] = w, *this;
         }
         Vector4D& SetXYZW(const float x=float{},
-                     const float y=float{},
-                     const float z=float{},
-                     const float w=float{}){
+                        const float y=float{},
+                        const float z=float{},
+                        const float w=float{}){
             vec_4.p_coordinates[0] = x;
             vec_4.p_coordinates[1] = y;
             vec_4.p_coordinates[2] = z;
