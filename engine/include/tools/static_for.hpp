@@ -1,4 +1,4 @@
-
+#pragma once
 namespace ExCCCRender::Tools {
     /*
      * 编译期for循环, 感谢小彭老师, 伟大无需多言
