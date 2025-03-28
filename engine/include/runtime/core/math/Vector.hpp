@@ -23,7 +23,7 @@ namespace ExCCCRender::Tools::Math{
         using inner_type = Ty;
     public:
         explicit Vector2D(const inner_type& x,  const inner_type& y):
-            x(x), y(y) {}
+            vec_2(x, y) {}
         explicit Vector2D(){}
         ~Vector2D(){}
         Vector2D(const Vector2D& vec) = default;
@@ -32,76 +32,47 @@ namespace ExCCCRender::Tools::Math{
         Vector2D& operator=(Vector2D&& vec) = default;
         template <typename OtherTy>
         bool operator==(const Vector2D<OtherTy>& vec) {
-            using operator_type_ = std::common_type_t<OtherTy, inner_type>;
-            auto epsilon =std::numeric_limits<operator_type_>::epsilon();
-            if (std::abs(x-vec.X()) <= epsilon &&
-                std::abs(y-vec.Y()) <= epsilon){
-                return true;
-            }
-            return false;
-        }
-        inner_type operator[](const size_t& i) const{
-            if (i == 0) return x;
-            if (i == 1) return y;
-            throw std::out_of_range("Index out of range");
+            return vec_2.p_coordinates[0] == vec.X() &&
+                vec_2.p_coordinates[1] == vec.Y();
         }
     public:
         Vector2D& SetX(const inner_type& x=inner_type{}) noexcept{
-            this->x = x;
+            vec_2.p_coordinates[0] = x;
             return *this;
         }
         Vector2D& SetY(const inner_type& y=inner_type{}) noexcept{
-            this->y = y;
+            vec_2.p_coordinates[1] = y;
             return *this;
         }
         void SetXY(const inner_type& x=inner_type{}, const inner_type& y=inner_type{}) noexcept{
-            this->x = x;
-            this->y = y;
-        }
-        inner_type GetX() const noexcept{
-            return x;
-        }
-        inner_type GetY() const noexcept{
-            return y;
+            vec_2.p_coordinates[0]= x;
+            vec_2.p_coordinates[1] = y;
         }
         inner_type X() const noexcept{
-            return x;
+            return vec_2.p_coordinates[0];
         }
         inner_type Y() const noexcept{
-            return y;
+            return vec_2.p_coordinates[1];
         }
 
-        inner_type LengthSquare() const noexcept{
-            return square_();
-        }
-        inner_type SizeSquare() const noexcept{
-            return square_();
-        }
-        double GetLength() const noexcept{
-            return length_();
+        auto SquareSum() const noexcept{
+            return vec_2.square_sum();
         }
         double Length() const noexcept{
-            return length_();
+            return vec_2.length();
         }
         double Size() const noexcept{
-            return length_();
+            return vec_2.length();
         }
     public:
         bool IsZeroVector() const noexcept{
-            auto inner_value_ = inner_type{};
-            return this->x == inner_value_ && this->y == inner_value_;
+            return vec_2.is_zero_vector();
         }
         bool IsUnitVector() const noexcept{
-            // * 坐标轴向量直接返回true
-            if(IsAxis()){
-                return true;
-            }
-            return square_() == (inner_type)1;
+            return vec_2.is_unit_vector();
         }
         bool IsAxis() const noexcept{
-            auto inner_value_ = inner_type{};
-            return (this->x == (inner_type)1 && this->y == inner_value_) ||
-                (this->x == inner_value_ && this->y == (inner_type)1) ;
+            return vec_2.is_axis();
         }
         template <typename OtherTy>
         bool IsParallelWith(const Vector2D<OtherTy>& other) const {
@@ -118,19 +89,12 @@ namespace ExCCCRender::Tools::Math{
         }
     public:
         Vector2D& Normalize() {
-            if (IsUnitVector() || square_() == 1){
-                return *this;
-            }
-            auto size = Size();
-            x /= size;
-            y /= size;
+            vec_2.normalize();
             return *this;
         }
         template <typename OtherTy>
-        auto Dot(const Vector2D<OtherTy>& other) const -> std::common_type_t<inner_type, OtherTy>{
-            using result_type_ = std::common_type_t<inner_type, OtherTy>;
-            return static_cast<result_type_>(x) * static_cast<result_type_>(other.X()) +
-               static_cast<result_type_>(y) * static_cast<result_type_>(other.Y());
+        auto Dot(const Vector2D<OtherTy>& other) const {
+            return vec_2.dot(other);
         }
     private:
         double length_() const noexcept{
@@ -140,10 +104,12 @@ namespace ExCCCRender::Tools::Math{
             return std::sqrt(square_());
         }
         inner_type square_() const noexcept{
-            return x*x+y*y;
+            return vec_2.p_coordinates[0]*vec_2.p_coordinates[0]
+             + vec_2.p_coordinates[1]*vec_2.p_coordinates[1];
         }
     private:
         inner_type x{}, y{};
+        detail::vector_n<Ty, 2> vec_2;
     };
     template <Arithmetic Ty>
     struct Vector3D{
@@ -160,7 +126,9 @@ namespace ExCCCRender::Tools::Math{
         Vector3D& operator=(Vector3D&& vec) = default;
         template <typename OtherTy>
         bool operator==(const Vector3D<OtherTy>& vec) {
-            return vec_3 == vec.vec_3;
+            return vec_3.p_coordinates[0] == vec.X()
+                && vec_3.p_coordinates[1] == vec.Y()
+                && vec_3.p_coordinates[2] == vec.Z();
         }
     public:
         Vector2D<inner_type> ToVector2D() const {
@@ -262,6 +230,106 @@ namespace ExCCCRender::Tools::Math{
         }
     private:
         detail::vector_n<Ty, 3> vec_3;
+    };
+
+    template <Arithmetic Ty>
+    struct Vector4D{
+    public:
+        using inner_type = Ty;
+    public:
+        explicit Vector4D(const inner_type& x,  const inner_type& y, const inner_type& z, const inner_type& w):
+            vec_4(x, y, z, w) {}
+        explicit Vector4D(){}
+        ~Vector4D(){}
+        Vector4D(const Vector4D& vec) = default;
+        Vector4D(Vector4D&& vec) = default;
+        Vector4D& operator=(const Vector4D& vec) = default;
+        Vector4D& operator=(Vector4D&& vec) = default;
+        template <typename OtherTy>
+        bool operator==(const Vector4D<OtherTy>& vec) {
+            return vec_4.p_coordinates[0] == vec.X()
+                && vec_4.p_coordinates[1] == vec.Y()
+                && vec_4.p_coordinates[2] == vec.Z()
+                && vec_4.p_coordinates[3] == vec.W();
+        }
+    public:
+        Vector2D<inner_type> ToVector3D() const {
+            return Vector2D<inner_type>(vec_4.p_coordinates[0], vec_4.p_coordinates[1], vec_4.p_coordinates[2]);
+        }
+        Vector4D& SetX(const inner_type& x=inner_type{}) {
+            vec_4.p_coordinates[0] = x;
+            return *this;
+        }
+        Vector4D& SetY(const inner_type& y=inner_type{}) {
+            vec_4.p_coordinates[1] = y;
+            return *this;
+        }
+        Vector4D& SetZ(const inner_type& z=inner_type{}){
+            vec_4.p_coordinates[2] = z;
+            return *this;
+        }
+        Vector4D& SetW(const inner_type& w=inner_type{}){
+            vec_4.p_coordinates[3] = w;
+            return *this;
+        }
+        void SetXYZW(const inner_type& x=inner_type{},
+                     const inner_type& y=inner_type{},
+                     const inner_type& z=inner_type{},
+                     const inner_type& w=inner_type{}){
+            vec_4.p_coordinates[0] = x;
+            vec_4.p_coordinates[1] = y;
+            vec_4.p_coordinates[2] = z;
+            vec_4.p_coordinates[3] = w;
+        }
+        // @ 返回模的平方
+        auto SquareSum() const noexcept{
+            return vec_4.square_sum();
+        }
+
+        auto Length() const noexcept{
+            return vec_4.length();
+        }
+        auto Size() const noexcept{
+            return vec_4.length();
+        }
+
+        auto X() const noexcept{
+            return vec_4.p_coordinates[0];
+        }
+        auto Y() const noexcept{
+            return vec_4.p_coordinates[1];
+        }
+        auto Z() const noexcept{
+            return vec_4.p_coordinates[2];
+        }
+        auto W() const noexcept{
+            return vec_4.p_coordinates[3];
+        }
+    public:
+    // ! 谓词方法
+        bool IsZeroVector() const noexcept{
+            return vec_4.is_zero_vector();
+        }
+        bool IsUnitVector() const noexcept{
+            return vec_4.is_unit_vector();
+        }
+        bool IsAxis() const noexcept{
+           return vec_4.is_axis();
+        }
+
+    public:
+        Vector4D& Normalize() {
+            vec_4.normalize();
+        }
+        template <typename OtherTy>
+        auto Dot(const Vector4D<OtherTy>& other) {
+            return vec_4.p_coordinates[0] * other.X()
+                 + vec_4.p_coordinates[1] * other.Y()
+                 + vec_4.p_coordinates[2] * other.Z()
+                 + vec_4.p_coordinates[3] * other.W();
+        }
+    private:
+        detail::vector_n<Ty, 4> vec_4;
     };
 
 

@@ -5,6 +5,6 @@
 
 int main() {
     using namespace ExCCCRender::Tools::Math;
-    std::cout << 3 * 3.3 << std::endl;
+
     return 0;
 }

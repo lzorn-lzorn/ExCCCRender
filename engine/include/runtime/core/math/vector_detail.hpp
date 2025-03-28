@@ -93,6 +93,7 @@ namespace ExCCCRender::Tools::Math::detail {
                 });
             }
             auto dot(const vector_n& vec){
+                static_assert(vec.p_coordinates.size()==p_coordinates.size(), "Vector维度不一致");
                 ResultType res{};
                 static_for<N>([&](size_t i){
                     res += p_coordinates[i] * vec.p_coordinates[i];
