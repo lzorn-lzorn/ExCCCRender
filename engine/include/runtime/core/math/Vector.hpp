@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <type_traits>
 #include "tools/static_for.hpp"
+#include "pch.hpp"
+#include "vector_detail.hpp"
 /*
  * 以下是Vector(向量的定义)
  * 本质上Vector只有 2D, 3D, 4D
@@ -15,9 +17,6 @@
  */
 
 namespace ExCCCRender::Tools::Math{
-    template <typename Ty>
-    concept Arithmetic = std::is_arithmetic<Ty>::value;
-
     template <Arithmetic Ty>
     struct Vector2D{
     public:
@@ -152,7 +151,7 @@ namespace ExCCCRender::Tools::Math{
         using inner_type = Ty;
     public:
         explicit Vector3D(const inner_type& x,  const inner_type& y, const inner_type& z):
-            x(x), y(y), z(z) {}
+            vec_3(x, y, z) {}
         explicit Vector3D(){}
         ~Vector3D(){}
         Vector3D(const Vector3D& vec) = default;
@@ -161,96 +160,63 @@ namespace ExCCCRender::Tools::Math{
         Vector3D& operator=(Vector3D&& vec) = default;
         template <typename OtherTy>
         bool operator==(const Vector3D<OtherTy>& vec) {
-            using operator_type_ = std::common_type_t<OtherTy, inner_type>;
-            auto epsilon =std::numeric_limits<operator_type_>::epsilon();
-            if (std::abs(x-vec.X()) <= epsilon &&
-                std::abs(y-vec.Y()) <= epsilon &&
-                std::abs(z-vec.Z()) <= epsilon){
-                return true;
-            }
-            return false;
+            return vec_3 == vec.vec_3;
         }
     public:
         Vector2D<inner_type> ToVector2D() const {
-            return Vector2D<inner_type>(this->x, this->y);
+            return Vector2D<inner_type>(vec_3.p_coordinates[0], vec_3.p_coordinates[1]);
         }
         Vector3D& SetX(const inner_type& x=inner_type{}) {
-            this->x = x;
+            vec_3.p_coordinates[0] = x;
             return *this;
         }
         Vector3D& SetY(const inner_type& y=inner_type{}) {
-            this->y = y;
+            vec_3.p_coordinates[1] = y;
             return *this;
         }
         Vector3D& SetZ(const inner_type& z=inner_type{}){
-            this->z = z;
+            vec_3.p_coordinates[2] = z;
             return *this;
         }
         void SetXYZ(const inner_type& x=inner_type{},
                     const inner_type& y=inner_type{},
                     const inner_type& z=inner_type{}){
-            this->x = x;
-            this->y = y;
-            this->z = z;
+            vec_3.p_coordinates[0] = x;
+            vec_3.p_coordinates[1] = y;
+            vec_3.p_coordinates[2] = z;
         }
-        inner_type LengthSquare() const noexcept{
-            return square_();
+        // @ 返回模的平方
+        auto SquareSum() const noexcept{
+            return vec_3.square_sum();
         }
-        inner_type SizeSquare() const noexcept{
-            return square_();
+
+        auto Length() const noexcept{
+            return vec_3.length();
         }
-        double GetLength() const noexcept{
-            return length_();
+        auto Size() const noexcept{
+            return vec_3.length();
         }
-        double Length() const noexcept{
-            return length_();
+
+        auto X() const noexcept{
+            return vec_3.p_coordinates[0];
         }
-        double Size() const noexcept{
-            return length_();
+        auto Y() const noexcept{
+            return vec_3.p_coordinates[1];
         }
-        inner_type GetX() const noexcept{
-            return x;
-        }
-        inner_type GetY() const noexcept{
-            return y;
-        }
-        inner_type GetZ() const noexcept{
-            return z;
-        }
-        inner_type X() const noexcept{
-            return x;
-        }
-        inner_type Y() const noexcept{
-            return y;
-        }
-        inner_type Z() const noexcept{
-            return z;
-        }
-        inner_type operator[](const size_t& i) const{
-            if (i == 0) return x;
-            if (i == 1) return y;
-            if (i == 2) return z;
-            throw std::out_of_range("Index out of range");
+        auto Z() const noexcept{
+            return vec_3.p_coordinates[2];
         }
 
     public:
     // ! 谓词方法
         bool IsZeroVector() const noexcept{
-            auto inner_value_ = inner_type{};
-            return this->x == inner_value_ && this->y == inner_value_ && this->z == inner_value_;
+            return vec_3.is_zero_vector();
         }
         bool IsUnitVector() const noexcept{
-            // * 坐标轴向量直接返回true
-            if(IsAxis()){
-                return true;
-            }
-            return square_() == (inner_type)1;
+            return vec_3.is_unit_vector();
         }
         bool IsAxis() const noexcept{
-            auto inner_value_ = inner_type{};
-            return (this->x == (inner_type)1 && this->y == inner_value_, this->z == inner_value_) ||
-                (this->x == inner_value_ && this->y == (inner_type)1, this->z == inner_value_) ||
-                 (this->x == inner_value_ && this->y == inner_value_, this->z == (inner_type)1);
+           return vec_3.is_axis();
         }
         template <typename OtherTy>
         bool IsParallelWith(const Vector3D<OtherTy>& other) const {
@@ -269,18 +235,13 @@ namespace ExCCCRender::Tools::Math{
 
     public:
         Vector3D& Normalize() {
-            if (IsUnitVector() || square_() == 1){
-                return *this;
-            }
-            auto size = Size();
-            x /= size;
-            y /= size;
-            z /= size;
-            return *this;
+            vec_3.normalize();
         }
         template <typename OtherTy>
         auto Dot(const Vector3D<OtherTy>& other) const -> std::common_type_t<inner_type, OtherTy>{
-            return x * other.X() + y * other.Y() + z * other.Z();
+            return vec_3.p_coordinates[0] * other.X()
+                 + vec_3.p_coordinates[1] * other.Y()
+                 + vec_3.p_coordinates[2] * other.Z();
         }
         // note: 只有三维向量有叉积
         template <typename OtherTy>
@@ -294,120 +255,14 @@ namespace ExCCCRender::Tools::Math{
                 auto inner_value_ = inner_type{};
                 return Vector3D<OtherTy>(inner_value_, inner_value_, inner_value_);
             }
-            result_inner_type x = y * other.Z() - z * other.Y();
-            result_inner_type y = x * other.Z() - z * other.X();
-            result_inner_type z = x * other.Y() - y * other.X();
+            result_inner_type x = vec_3.p_coordinates[1] * other.Z() - vec_3.p_coordinates[2] * other.Y();
+            result_inner_type y = vec_3.p_coordinates[0] * other.Z() - vec_3.p_coordinates[2] * other.X();
+            result_inner_type z = vec_3.p_coordinates[0] * other.Y() - vec_3.p_coordinates[1] * other.X();
             return Vector3D<result_inner_type>(x, y, z);
         }
     private:
-        double length_() const noexcept{
-            if (IsUnitVector()){
-                return 1.0;
-            }
-            return std::sqrt(square_());
-        }
-        inner_type square_() const noexcept{
-            return x*x+y*y+z*z;
-        }
-    private:
-        inner_type x{}, y{}, z{};
+        detail::vector_n<Ty, 3> vec_3;
     };
 
-    namespace detail {
-        template <Arithmetic Ty, size_t N>
-        struct vector_n{
-            // * 防止溢出类型
-            using ResultType = std::conditional_t<std::is_integral_v<Ty>,
-                    std::conditional_t<(sizeof(Ty) <= sizeof(int16_t)),
-                        int16_t,
-                        std::conditional_t<(sizeof(Ty) == sizeof(int32_t)),
-                            int32_t,
-                            std::conditional_t<(sizeof(Ty) == sizeof(int64_t)),
-                                int64_t,
-                                int64_t // int64 为最高
-                            >
-                        >
-                    >,
-                    std::conditional_t<std::is_floating_point_v<Ty>,
-                        long double,
-                        Ty
-                    >
-                >;
-        public:
-            explicit vector_n(std::initializer_list<Ty> list){
-                p_coordinates = std::array<Ty, N>(list.begin(), list.end());
-            }
-            vector_n(const vector_n& other){
 
-            }
-            vector_n(vector_n&& other){}
-            vector_n& operator=(const vector_n& other){}
-            vector_n& operator=(vector_n&& other){}
-            bool operator==(const vector_n& other){}
-        public:
-            bool is_zero_vector() const noexcept{
-                bool ret = true;
-                auto epsilon = std::numeric_limits<Ty>::epsilon();
-                static_for<0, N>([&](size_t i){
-                    if constexpr (p_coordinates[i] <= epsilon){
-                        ret = false;
-                    }
-                });
-                return ret;
-            }
-            bool is_unit_vector() const noexcept{
-                return square_sum() == 1;
-            }
-            bool is_axis() const noexcept{
-                size_t count = 0;
-                static_for<N>([&](auto i) {
-                    if constexpr(p_coordinates[i] == 1) {
-                        ++count;
-                    } else if (p_coordinates[i] != 0) {
-                        count = 2; // 直接标记为不符合条件
-                    }
-                });
-                return count == 1;
-            }
-            bool is_parallel_with(const vector_n& vec){}
-            bool is_vertical_with(const vector_n& vec){}
-        public:
-            void normalize() {
-                if (is_unit_vector()){
-                    return *this;
-                }
-                auto square_ = square_sum();
-                if(square_ == 1){
-                    return *this;
-                }
-                auto size_ = std::sqrt(square_);
-                static_for<N>([&](size_t i){
-                    p_coordinates[i] /= size_;
-                });
-            }
-            auto dot(const vector_n& vec){
-                ResultType res{};
-                static_for<N>([&](size_t i){
-                    res += p_coordinates[i] * vec.p_coordinates[i];
-                });
-            }
-            double length() const noexcept{
-                if (is_unit_vector()){
-                    return 1.0;
-                }
-                return std::sqrt(square_sum());
-            }
-
-            // * 返回 x*x+y*y+z*z
-            auto square_sum() const noexcept{
-                ResultType res = 0;
-                static_for<N>([&](size_t i){
-                    res += p_coordinates[i] * p_coordinates[i];
-                });
-                return res;
-            }
-        public:
-            std::array<Ty, N> p_coordinates;
-        };
-    }
 };
