@@ -29,7 +29,7 @@ set(ExCCCRender_INCLUDE_DIR "${ExCCCRender_ENGINE_DIR}/include")
 set(ExCCCRender_SOURCE_DIR "${ExCCCRender_ENGINE_DIR}/src")
 
 # 第三方库路径
-set(ExCCCRender_THIRDPARTY_DIR "${ExCCCRender_ROOT_DIR}/thirdparty")
+set(ExCCCRender_THIRDPARTY_DIR "${ExCCCRender_ENGINE_DIR}/thirdparty")
 
 add_subdirectory(engine)
-add_subdirectory(thirdparty)
+

@@ -7,7 +7,7 @@ add_library(${PROJECT_NAME} SHARED dummy.cpp)
 
 add_subdirectory(${ExCCCRender_THIRDPARTY_DIR}/fmt)
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
-target_include_directories(${PROJECT_NAME} PUBLIC ${ExCCCRender_THIRDPARTY_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC ${ExCCCRender_THIRDPARTY_DIR}/fmt/include)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 

@@ -1,5 +1,6 @@
 # aux_source_directory(${ExCCCRender_SOURCE_DIR}/ ENGINE_SOURCES)
 
+message("ExCCCRender_THIRDPARTY_DIR: ${ExCCCRender_THIRDPARTY_DIR}")
 file(GLOB_RECURSE
     ENGINE_SOURCES
     ${ExCCCRender_SOURCE_DIR}/*.cpp
@@ -27,7 +28,11 @@ find_package(OpenGL REQUIRED)
 # message("PROJECT_NAME: ${PROJECT_NAME}")
 add_executable(${PROJECT_NAME} ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 
+add_subdirectory(${ExCCCRender_THIRDPARTY_DIR})
+target_link_libraries(${PROJECT_NAME} PUBLIC thirdparty)
+
 target_include_directories(${PROJECT_NAME} PUBLIC ${ExCCCRender_INCLUDE_DIR})
+
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 target_precompile_headers(${PROJECT_NAME} PUBLIC ${ExCCCRender_INCLUDE_DIR}/pch.hpp)
 
