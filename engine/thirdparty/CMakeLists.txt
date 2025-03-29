@@ -5,9 +5,7 @@ set(ENGINE_THIRDPARTY_CMAKE_DIR ${ExCCCRender_THIRDPARTY_DIR}/cmake)
 
 add_library(${PROJECT_NAME} SHARED dummy.cpp)
 
-add_subdirectory(${ExCCCRender_THIRDPARTY_DIR}/fmt)
-target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
-target_include_directories(${PROJECT_NAME} PUBLIC ${ExCCCRender_THIRDPARTY_DIR}/fmt/include)
+include (${ENGINE_THIRDPARTY_CMAKE_DIR}/find_fmt.cmake)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
