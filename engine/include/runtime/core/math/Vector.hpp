@@ -114,7 +114,6 @@ public:
     Vector2D& Zoom(const float ratio) {
         return proportionally_change(ratio), *this;
     }
-
 };
 
 

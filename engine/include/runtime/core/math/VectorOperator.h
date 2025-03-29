@@ -1,9 +1,10 @@
 #pragma once
-#include "runtime/core/traits.hpp"
-#include "tools/static_for.hpp"
+#include <iostream>
+#include <format>
 #include "Vector.hpp"
 
 namespace ExCCCRender::Core::Math {
+    inline std::ostream& operator<<(std::ostream &out, const Vector3D& vec);
     inline double Dot(const Vector2D&, const Vector2D&);
     inline double Dot(const Vector3D&, const Vector3D&);
     inline double Dot(const Vector4D&, const Vector4D&);

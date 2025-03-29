@@ -3,6 +3,7 @@
 #include <array>
 #include "runtime/core/math/vector_detail.hpp"
 #include "runtime/core/math/Vector.hpp"
+#include <fmt/format.h>
 
 using namespace ExCCCRender::Core::Math;
 int main() {
