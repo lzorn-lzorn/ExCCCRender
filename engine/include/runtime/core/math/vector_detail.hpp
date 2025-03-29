@@ -12,8 +12,8 @@ template <size_t N>
 struct VectorBase {
 public:
     constexpr static size_t Dimension = N;
-
-public:
+    explicit VectorBase() {}
+protected:
     explicit VectorBase(std::initializer_list<float> list) {
         coordinates = std::array<float, N>(list.begin(), list.end());
     }
@@ -52,7 +52,7 @@ public:
         return *this;
     }
 
-    bool operator==(const VectorBase& other) {
+    bool operator==(const VectorBase& other) const {
         static_assert(N == VectorBase::Dimension, "向量维度不一致");
         if (other.coordinates.size() != coordinates.size()) {
             return false;
@@ -96,7 +96,7 @@ public:
         return operator+=(-number);
     }
 
-public:
+protected:
     template <Arithmetic... Args>
     VectorBase& mutli_add(const Args&... args) {
         static_assert(sizeof...(Args) == N, "参数数量要和向量维度保持一致");
@@ -141,7 +141,7 @@ public:
         return count == 1;
     }
 
-public:
+protected:
     VectorBase& normalize() {
         if (is_unit_vector()) {
             return *this;

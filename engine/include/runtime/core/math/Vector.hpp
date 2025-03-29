@@ -23,7 +23,18 @@ public:
     Vector2D(Vector2D&& vec)                 = default;
     Vector2D& operator=(const Vector2D& vec) = default;
     Vector2D& operator=(Vector2D&& vec)      = default;
-    bool      operator==(const Vector2D&);
+
+    bool operator==(const Vector2D& vec) const{
+        return VectorBase<2>::operator==(vec);
+    }
+
+    Vector2D& operator+(const Vector2D& other) {
+        return VectorBase<2>::operator+=(other), *this;
+    }
+
+    Vector2D& operator-(const Vector2D& other) {
+        return VectorBase<2>::operator-=(other), *this;
+    }
 
     Vector2D& operator+=(const Vector2D& other) {
         return VectorBase<2>::operator+=(other), *this;
@@ -90,13 +101,20 @@ public:
     }
 
 public:
+    double Dot(const Vector2D& other){
+        return Vector2D::dot(other);
+    }
+    double Dot(const Vector2D& other) const {
+        return Vector2D::dot(other);
+    }
     Vector2D& Normalize() {
         return normalize(), *this;
     }
 
-    Vector2D& ProportionallyChange(const float ratio) {
+    Vector2D& Zoom(const float ratio) {
         return proportionally_change(ratio), *this;
     }
+
 };
 
 
@@ -118,8 +136,17 @@ public:
     Vector3D& operator=(const Vector3D& vec) = default;
     Vector3D& operator=(Vector3D&& vec)      = default;
 
-    bool operator==(const Vector3D& vec);
+    bool operator==(const Vector3D& vec) const{
+        return VectorBase<3>::operator==(vec);
+    }
 
+    Vector3D& operator+(const Vector3D& other){
+        return operator+=(other), *this;
+    }
+
+    Vector3D& operator-(const Vector3D& other){
+        return operator-=(other);
+    }
     Vector3D& operator+=(const Vector3D& other) {
         return VectorBase<3>::operator+=(other), *this;
     }
@@ -180,6 +207,13 @@ public:
         return length();
     }
 
+    double Dot(const Vector3D& other){
+        return Vector3D::dot(other);
+    }
+    double Dot(const Vector3D& other) const {
+        return Vector3D::dot(other);
+    }
+
 public:
     bool IsZeroVector() const noexcept {
         return is_zero_vector();
@@ -196,7 +230,9 @@ public:
     Vector3D& Normalize() {
         return normalize(), (*this);
     }
-
+    Vector3D& Zoom(const float ratio) {
+        return proportionally_change(ratio), *this;
+    }
 };
 
 struct Vector4D: public VectorBase<4>{
@@ -216,7 +252,18 @@ public:
     Vector4D(Vector4D&& vec)                 = default;
     Vector4D& operator=(const Vector4D& vec) = default;
     Vector4D& operator=(Vector4D&& vec)      = default;
-    bool      operator==(const Vector4D&);
+
+    bool operator==(const Vector4D& vec) const{
+        return VectorBase<4>::operator==(vec);
+    }
+
+    Vector4D& operator+(const Vector4D& other) {
+        return Vector4D::operator+=(other), *this;
+    }
+
+    Vector4D& operator-(const Vector4D& other) {
+        return Vector4D::operator-=(other), *this;
+    }
 
     Vector4D& operator+=(const Vector4D& other) {
         return Vector4D::operator+=(other), *this;
@@ -305,6 +352,7 @@ public:
     }
 
 public:
+
     bool IsZeroVector() const noexcept {
         return is_zero_vector();
     }
@@ -318,10 +366,18 @@ public:
     }
 
 public:
+    double Dot(const Vector4D& other){
+        return Vector4D::dot(other);
+    }
+    double Dot(const Vector4D& other) const {
+        return Vector4D::dot(other);
+    }
     Vector4D& Normalize() {
         return normalize(), *this;
     }
-
+    Vector4D& Zoom(const float ratio) {
+        return proportionally_change(ratio), *this;
+    }
 };
 
 };  // namespace ExCCCRender::Core::Math
