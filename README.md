@@ -11,3 +11,6 @@ ExCCCRender uses cmake to build and used lots of C++20 feature. So please check 
 - CMake version 3.20 at least
 - C++ compiler should support C++20
 
+## About Doc
+In the doc/, I will introduce what is RayTracing and How can we implement a RayTracer (the Structure of ExCCCRender ^_^)
+

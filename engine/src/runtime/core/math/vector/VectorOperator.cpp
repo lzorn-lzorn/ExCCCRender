@@ -1,6 +1,6 @@
 
-#include "runtime/core/math/VectorOperator.h"
-#include "runtime/core/math/Vector.hpp"
+#include "runtime/core/math/vector/VectorOperator.h"
+#include "runtime/core/math/vector/Vector.hpp"
 
 namespace ExCCCRender::Core::Math {
 
