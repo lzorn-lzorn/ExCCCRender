@@ -18,7 +18,7 @@ file(GLOB_RECURSE
     ${ExCCCRender_INCLUDE_DIR}/*.hpp
 )
 
-# find_package(Vulkan REQUIRED)
+find_package(Vulkan REQUIRED)
 find_package(OpenGL REQUIRED)
 
 # message("ExCCCRender_SOURCE_DIR: ${ExCCCRender_SOURCE_DIR}")
