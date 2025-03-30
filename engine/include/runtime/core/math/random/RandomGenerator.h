@@ -1,6 +1,16 @@
 #pragma once
 
+#include <random>
+
 namespace ExCCCRender::Core::Math {
+using MersenneTwister32 = std::mt19937;
+
+using MersenneTwister64 = std::mt19937_64;
+
+using LinearCongruential = std::minstd_rand;
+
+using SubtractWithCarry = std::ranlux48_base;
+
 struct XORShift32 {
     using result_type = uint32_t;
 
