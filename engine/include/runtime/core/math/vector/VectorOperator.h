@@ -1,6 +1,4 @@
 #pragma once
-#include <iostream>
-#include <format>
 #include "Vector.hpp"
 
 namespace ExCCCRender::Core::Math {
@@ -35,17 +33,17 @@ inline Vector2D operator-(const Vector2D&, const Vector2D&);
 inline Vector3D operator-(const Vector3D&, const Vector3D&);
 inline Vector4D operator-(const Vector4D&, const Vector4D&);
 
-inline Vector2D operator*(const float, const Vector2D&);
-inline Vector2D operator*(const Vector2D&, const float);
-inline Vector3D operator*(const float, const Vector3D&);
-inline Vector3D operator*(const Vector3D&, const float);
-inline Vector4D operator*(const float, const Vector4D&);
-inline Vector4D operator*(const Vector4D&, const float);
+inline Vector2D operator*(const double, const Vector2D&);
+inline Vector2D operator*(const Vector2D&, const double);
+inline Vector3D operator*(const double, const Vector3D&);
+inline Vector3D operator*(const Vector3D&, const double);
+inline Vector4D operator*(const double, const Vector4D&);
+inline Vector4D operator*(const Vector4D&, const double);
 
-inline Vector2D Zoom(const float, const Vector2D&);
-inline Vector2D Zoom(const Vector2D&, const float);
-inline Vector3D Zoom(const float, const Vector3D&);
-inline Vector3D Zoom(const Vector3D&, const float);
-inline Vector4D Zoom(const float, const Vector4D&);
-inline Vector4D Zoom(const Vector4D&, const float);
+inline Vector2D Zoom(const double, const Vector2D&);
+inline Vector2D Zoom(const Vector2D&, const double);
+inline Vector3D Zoom(const double, const Vector3D&);
+inline Vector3D Zoom(const Vector3D&, const double);
+inline Vector4D Zoom(const double, const Vector4D&);
+inline Vector4D Zoom(const Vector4D&, const double);
 }  // namespace ExCCCRender::Core::Math

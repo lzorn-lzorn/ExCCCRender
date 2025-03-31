@@ -23,7 +23,7 @@ find_package(OpenGL REQUIRED)
 
 # message("ExCCCRender_SOURCE_DIR: ${ExCCCRender_SOURCE_DIR}")
 # message("ExCCCRender_INCLUDE_DIR: ${ExCCCRender_INCLUDE_DIR}")
-# message("ENGINE_SOURCES: ${ENGINE_SOURCES}")
+ message("ENGINE_SOURCES: ${ENGINE_SOURCES}")
 # message("ENGINE_HEADERS: ${ENGINE_HEADERS}")
 # message("PROJECT_NAME: ${PROJECT_NAME}")
 add_executable(${PROJECT_NAME} ${ENGINE_SOURCES} ${ENGINE_HEADERS})

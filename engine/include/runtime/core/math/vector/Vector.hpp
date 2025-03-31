@@ -134,10 +134,29 @@ public:
     ~Vector3D() {
     }
 
-    Vector3D(const Vector3D& vec)            = default;
-    Vector3D(Vector3D&& vec)                 = default;
-    Vector3D& operator=(const Vector3D& vec) = default;
-    Vector3D& operator=(Vector3D&& vec)      = default;
+    Vector3D(const Vector3D& vec){
+        this->coordinates = vec.coordinates;
+    }
+    Vector3D(Vector3D&& vec){
+        if (this == &vec) {
+            return;
+        }
+        this->coordinates.swap(vec.coordinates);
+        std::fill(vec.coordinates.begin(), vec.coordinates.end(), 0.0f);
+    }
+    Vector3D& operator=(const Vector3D& vec) {
+        this->coordinates = vec.coordinates;
+        return *this;
+    }
+    Vector3D& operator=(Vector3D&& vec) {
+        if (this == &vec) {
+            return *this;
+        }
+        this->coordinates.swap(vec.coordinates);
+        std::fill(vec.coordinates.begin(), vec.coordinates.end(), 0.0f);
+        return *this;
+    }
+
 
     bool operator==(const Vector3D& vec) const {
         return VectorBase<3>::operator==(vec);
