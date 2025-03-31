@@ -61,12 +61,18 @@ public:
     template <Arithmetic RetType,
               RandomGen Gen         = std::default_random_engine,
               typename Distribution = Gaussian<RetType>>
-    std::span<RetType> GenerateN(uint32_t number,
+    std::vector<RetType> GenerateN(uint32_t number,
                                 int64_t  left      = 0,
                                 int64_t  right     = 1,
                                 uint32_t seed      = std::random_device{}(),
                                 Gen      generator = Gen{}) {
+        std::vector<RetType> result(number);
+        for (uint32_t i = 0; i < number; ++i) {
+            result[i] = Generate<RetType, Gen, Distribution>(left, right, seed, generator);
+        }
+        return result;
     }
+
 
 public:
     uint32_t seed;
