@@ -9,6 +9,7 @@
 #include <numeric>
 #include <utility>
 #include "Distribution.h"
+#include "RandomGenerator.h"
 #include "runtime/core/traits.hpp"
 
 namespace ExCCCRender::Core::Math {
@@ -35,15 +36,14 @@ public:
      * @return：生成的随机数, 其类型为 RetType (可计算类型)
      */
     template <Arithmetic RetType,
-              typename SeedType     = std::random_device,
-              typename Distribution = Gaussian<RetType>,
-              RandomGen Gen         = std::default_random_engine>
+              RandomGen Gen         = std::default_random_engine,
+              typename Distribution = Uniform<RetType>>
     RetType Generate(int64_t  left      = 0,
                      int64_t  right     = 1,
                      uint32_t seed      = std::random_device{}(),
                      Gen      generator = Gen{}) {
         this->seed = seed;
-        generator(this->seed);
+        generator.seed(this->seed);
         Distribution dist(left, right);
         return dist(generator);
     }
@@ -59,10 +59,9 @@ public:
      * @return：生成的随机数, 其类型为 RetType (可计算类型)
      */
     template <Arithmetic RetType,
-              typename SeedType     = std::random_device,
-              typename Distribution = Gaussian<RetType>,
-              RandomGen Gen         = std::default_random_engine>
-    std::span<RetType> Generate(uint32_t number,
+              RandomGen Gen         = std::default_random_engine,
+              typename Distribution = Gaussian<RetType>>
+    std::span<RetType> GenerateN(uint32_t number,
                                 int64_t  left      = 0,
                                 int64_t  right     = 1,
                                 uint32_t seed      = std::random_device{}(),

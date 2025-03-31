@@ -4,6 +4,7 @@
 
 If you want to build ExCCCRender, you need to install the following third-party libries:
 - Vulkan (Recommand)
+- fmt::fmt
 
 
 

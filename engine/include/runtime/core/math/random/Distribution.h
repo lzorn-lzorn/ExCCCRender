@@ -28,54 +28,54 @@ using Discrete = std::discrete_distribution<Ty>;
 
 template <Arithmetic Ty>
 using Uniform =
-    std::conditional<std::signed_integral<Ty>, std::uniform_int_distribution<Ty>, std::uniform_real_distribution<Ty>>;
+    std::conditional<std::signed_integral<Ty>, std::uniform_int_distribution<Ty>, std::uniform_real_distribution<Ty>>::type;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using Exponential = std::exponential_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using Gamma = std::gamma_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using Weibull = std::weibull_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using ExtremeValue = std::extreme_value_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using Normal = std::normal_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using Gaussian = std::normal_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using Lognormal = std::lognormal_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using ChiSquared = std::chi_squared_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using Cauchy = std::cauchy_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using Fisher = std::fisher_f_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using F = std::fisher_f_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using Student = std::student_t_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using T = std::student_t_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using Cauchy = std::cauchy_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using PiecewiseConstant = std::piecewise_constant_distribution<Ty>;
 
-template <Arithmetic Ty>
+template <std::floating_point Ty>
 using PiecewiseLinear = std::piecewise_linear_distribution<Ty>;
 
 }  // namespace ExCCCRender::Core::Math

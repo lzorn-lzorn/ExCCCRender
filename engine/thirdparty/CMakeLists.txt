@@ -6,6 +6,7 @@ set(ENGINE_THIRDPARTY_CMAKE_DIR ${ExCCCRender_THIRDPARTY_DIR}/cmake)
 add_library(${PROJECT_NAME} SHARED dummy.cpp)
 
 include (${ENGINE_THIRDPARTY_CMAKE_DIR}/find_fmt.cmake)
+include (${ENGINE_THIRDPARTY_CMAKE_DIR}/find_range-v3.cmake)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
