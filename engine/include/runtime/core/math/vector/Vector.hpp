@@ -411,18 +411,21 @@ public:
     }
 };
 
-const Vector2D ZeroVector2D(0.0f, 0.0f);
-const Vector3D ZeroVector3D(0.0f, 0.0f, 0.0f);
-const Vector4D ZeroVector4D(0.0f, 0.0f, 0.0f, 0.0f);
-const Vector2D AxisX2D(1.0f, 0.0f);
-const Vector2D AxisY2D(0.0f, 1.0f);
-const Vector3D AxisX3D(1.0f, 0.0f, 0.0f);
-const Vector3D AxisY3D(0.0f, 1.0f, 0.0f);
-const Vector3D AxisZ3D(0.0f, 0.0f, 1.0f);
-const Vector4D AxisX4D(1.0f, 0.0f, 0.0f, 0.0f);
-const Vector4D AxisY4D(0.0f, 1.0f, 0.0f, 0.0f);
-const Vector4D AxisZ4D(0.0f, 0.0f, 1.0f, 0.0f);
-const Vector4D AxisW4D(0.0f, 0.0f, 0.0f, 1.0f);
+template<size_t N>
+struct VectorXD : public VectorBase<N> {};
+
+static const Vector2D ZeroVector2D(0.0f, 0.0f);
+static const Vector3D ZeroVector3D(0.0f, 0.0f, 0.0f);
+static const Vector4D ZeroVector4D(0.0f, 0.0f, 0.0f, 0.0f);
+static const Vector2D AxisX2D(1.0f, 0.0f);
+static const Vector2D AxisY2D(0.0f, 1.0f);
+static const Vector3D AxisX3D(1.0f, 0.0f, 0.0f);
+static const Vector3D AxisY3D(0.0f, 1.0f, 0.0f);
+static const Vector3D AxisZ3D(0.0f, 0.0f, 1.0f);
+static const Vector4D AxisX4D(1.0f, 0.0f, 0.0f, 0.0f);
+static const Vector4D AxisY4D(0.0f, 1.0f, 0.0f, 0.0f);
+static const Vector4D AxisZ4D(0.0f, 0.0f, 1.0f, 0.0f);
+static const Vector4D AxisW4D(0.0f, 0.0f, 0.0f, 1.0f);
 
 inline double Dot(const Vector2D& v1, const Vector2D& v2) {
     return v1.Dot(v2);
