@@ -1,6 +1,5 @@
 #pragma once
 #include "runtime/core/illumination/Point.h"
-#include "runtime/core/math/vector/VectorOperator.h"
 
 namespace ExCCCRender::Core::Illumination {
 using namespace ExCCCRender::Core::Math;
