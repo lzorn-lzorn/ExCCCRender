@@ -212,4 +212,34 @@ private:
         ((coordinates[Index] += args), ...);
     }
 };
+
+template <size_t N>
+inline VectorBase<N> Normalize(const VectorBase<N>& vec) {
+    VectorBase<N> ret(vec);
+    if (vec.is_unit_vector()) {
+        return ret;
+    }
+    ret.Normalize();
+    return ret;
+}
+
+template <size_t N>
+inline VectorBase<N> Zoom(const VectorBase<N>& vec, const float ratio) {
+    VectorBase<N> ret(vec);
+    ret.Zoom(ratio);
+    return ret;
+}
+
+template <size_t N>
+inline VectorBase<N> HadamardProduct(const VectorBase<N>& vec1, const VectorBase<N>& vec2) {
+    VectorBase<N> ret(vec1);
+    ret.HadamardProduct(vec2);
+    return ret;
+}
+
+template <size_t N>
+inline VectorBase<N> Dot(const VectorBase<N>& vec1, const VectorBase<N>& vec2) {
+    return VectorBase<N>(vec1.dot(vec2));
+}
+
 }  // namespace ExCCCRender::Core::Math::detail

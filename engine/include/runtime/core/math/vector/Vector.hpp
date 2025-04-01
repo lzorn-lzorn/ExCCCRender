@@ -461,6 +461,13 @@ inline bool IsVertical(const Vector2D& v1, const Vector2D& v2) {
     return Dot(v1, v2) == 0;
 }
 
+template <typename Vec>
+inline Vec Normalize(const Vec& vec) {
+    Vec ret(vec);
+    ret.Normalize(); // 调用 Vec 的成员函数 Normalize()
+    return ret;
+}
+
 inline Vector2D operator+(const Vector2D& v1, const Vector2D& v2) {
     return Vector2D(v1.X() + v2.X(), v1.Y() + v2.Y());
 }
