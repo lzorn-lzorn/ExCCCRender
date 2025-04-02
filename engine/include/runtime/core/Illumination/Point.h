@@ -3,6 +3,6 @@
 
 namespace ExCCCRender::Core::Illumination {
 using namespace ExCCCRender::Core::Math;
-using Point = Vector3D;
+using Point3D = Vector3D;
 using Direction = Vector3D;
 }

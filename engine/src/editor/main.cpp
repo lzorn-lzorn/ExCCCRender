@@ -15,7 +15,7 @@ int main() {
     std::cout << std::endl;
 
 
-    Ray ray(Point(0, 0, 0), Direction(1, 0, 0), 1);
+    Ray ray(Point3D(0, 0, 0), Direction(1, 0, 0), 1);
 
     auto point = ray.At(0.5);
 
