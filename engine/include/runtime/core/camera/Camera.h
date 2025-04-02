@@ -1,12 +1,14 @@
 #pragma once
 
 #include "runtime/core/illumination/Point.h"
+
 namespace ExCCCRender::Core{
 using namespace ExCCCRender::Core::Illumination;
-class Camera{
 
+
+class Camera{
 public:
-    Camera() = default;
+    explicit Camera(int32_t id) : id(id){}
     ~Camera() = default;
 
     Camera(const Camera&) = default;
@@ -16,9 +18,30 @@ public:
     Camera& operator=(Camera&&) = default;
 
 public:
+    Camera& SetAperture(const double aperture){
+        this->aperture = aperture;
+        return *this;
+    }
 
+    Camera& SetShutter(const double open, const double close){
+        this->shutter_open = open;
+        this->shutter_close = close;
+        return *this;
+    }
+
+    Camera& SetFocalDistance(const double focal_distance){
+        this->focal_distance = focal_distance;
+        return *this;
+    }
+
+    Camera& SetLens(const double lens_radius){
+        this->lens_radius = lens_radius;
+        return *this;
+    }
 
 private:
+    int32_t id{-1};
+
     // * 相机视锥的起点
     Point3D origin; // 等价于 lookfrom
     // * 相机视锥的终点
@@ -41,7 +64,8 @@ private:
     double focal_distance;
 
 
-
 };
+
+
 
 }
