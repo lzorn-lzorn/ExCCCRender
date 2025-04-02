@@ -16,9 +16,7 @@ public:
     }
 
     Camera& CreatCamera(){
-        Camera* camera_ptr = CameraAllocator();
-        cameras.push_back(*camera_ptr);
-        return *camera_ptr;
+
     }
 private:
     // * @function: 为一个相机分配内存

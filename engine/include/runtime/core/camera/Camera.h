@@ -1,6 +1,7 @@
 #pragma once
 
 #include "runtime/core/illumination/Point.h"
+#include "runtime/core/illumination/Ray.h"
 
 namespace ExCCCRender::Core{
 using namespace ExCCCRender::Core::Illumination;
@@ -16,7 +17,11 @@ public:
 
     Camera(Camera&&) = default;
     Camera& operator=(Camera&&) = default;
+public:
+    Ray GenerateRay() {
 
+        return Ray();
+    }
 public:
     Camera& SetAperture(const double aperture){
         this->aperture = aperture;
@@ -38,6 +43,20 @@ public:
         this->lens_radius = lens_radius;
         return *this;
     }
+
+    unsigned char * GetFilm() const {
+        return film;
+    }
+
+    // * 对图像做处理, 使其格式支持存入磁盘
+    void ImageMateData() const {
+        
+    }
+
+private:
+    // * 基于物理的相机最后得到的胶片图片
+    unsigned char * film = nullptr;
+
 
 private:
     int32_t id{-1};
