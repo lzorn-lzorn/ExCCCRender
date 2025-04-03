@@ -2,4 +2,5 @@ build/
 cmake-build/
 .cache/
 .vscode/
+asserts/
 .clangd
