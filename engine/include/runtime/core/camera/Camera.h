@@ -1,6 +1,6 @@
 #pragma once
 
-#include "runtime/core/illumination/Point.h"
+#include "runtime/core/math/Point.h"
 #include "runtime/core/illumination/Ray.h"
 
 namespace ExCCCRender::Core{
@@ -50,7 +50,7 @@ public:
 
     // * 对图像做处理, 使其格式支持存入磁盘
     void ImageMateData() const {
-        
+
     }
 
 private:

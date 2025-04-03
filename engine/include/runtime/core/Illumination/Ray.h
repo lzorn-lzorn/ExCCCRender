@@ -1,5 +1,5 @@
 #pragma once
-#include "runtime/core/illumination/Point.h"
+#include "runtime/core/math/Point.h"
 
 namespace ExCCCRender::Core::Illumination {
 using namespace ExCCCRender::Core::Math;
