@@ -22,6 +22,7 @@ int main() {
         return -1;
     }
 
+
     // 输出加载信息
     std::cout << "SUCCESS: " << scene->mNumMeshes << std::endl;
     system("pause");
