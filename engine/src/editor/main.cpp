@@ -3,7 +3,7 @@
 #include <array>
 #include "runtime/core/math/random/Random.h"
 #include "runtime/core/illumination/Ray.h"
-
+#include "assimp/scene.h"
 #include <fmt/core.h>
 
 using namespace ExCCCRender::Core::Math;

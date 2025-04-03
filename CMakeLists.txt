@@ -31,5 +31,17 @@ set(ExCCCRender_SOURCE_DIR "${ExCCCRender_ENGINE_DIR}/src")
 # 第三方库路径
 set(ExCCCRender_THIRDPARTY_DIR "${ExCCCRender_ENGINE_DIR}/thirdparty")
 
+# 设置可执行文件的输出路径
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${ExCCCRender_ROOT_DIR}/bin")
+# 设置静态库输出路径
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${ExCCCRender_ROOT_DIR}/lib")
+# 设置动态库输出路径
+# Windows 下dll须在exe同级目录
+if(WIN32)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+else()
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+endif()
+
 add_subdirectory(engine)
 
