@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "core/math/vector/Vector.hpp"
+#include "core/math/Point.h"
 namespace ExCCCRender::Asset{
 using namespace ExCCCRender::Core::Math;
 
@@ -28,5 +29,8 @@ struct Face{
 struct MeshInfo{
     std::vector<Vertex> vertexs;
     std::vector<Face> faces;
+    // * 局部坐标系 min 和 max
+    Point3D aabb_min;
+    Point3D aabb_max;
 };
 }
