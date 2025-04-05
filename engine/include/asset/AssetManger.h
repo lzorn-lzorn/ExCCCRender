@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string_view>
 namespace ExCCCRender::Asset {
 
 class AssetManager {
@@ -13,7 +14,7 @@ public:
     }
 
 public:
-    
+   
 private:
     AssetManager()                               = default;
     AssetManager(const AssetManager&)            = delete;
