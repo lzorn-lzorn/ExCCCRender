@@ -1,5 +1,5 @@
 #pragma once
-#include "asset/MeshInfo.h"
+#include "asset/SceneInfo.h"
 #include "core/math/Point.h"
 #include "core/illumination/Ray.h"
 #include "HitInfo.h"

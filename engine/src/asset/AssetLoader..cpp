@@ -1,10 +1,12 @@
 #include "asset/AssetLoader.h"
+#include "asset/SceneInfo.h"
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 #include "assimp/scene.h"
+#include <memory>
 
 namespace ExCCCRender::Asset {
-MeshInfo& AssetLoader::load_one_file_(const std::string_view path) {
+std::vector<MeshInfo> AssetLoader::load_one_file_(const std::string_view path) {
     Assimp::Importer importer;
     auto             path_ = path.data();
 
@@ -18,5 +20,19 @@ MeshInfo& AssetLoader::load_one_file_(const std::string_view path) {
         aiProcess_MakeLeftHanded       |     // * 左手系
         aiProcess_GenBoundingBoxes           // * 生成包围盒
     );
+    if (!scene || !scene->mRootNode) {
+        std::cerr << "FAILED: " << importer.GetErrorString() << std::endl;
+        return std::vector<MeshInfo>(0);
+    }
+    std::vector<MeshInfo> mesh_list;
+    mesh_list.reserve(scene->mNumMeshes);
+    auto mesh_ptrs = std::allocator<MeshInfo>().allocate(scene->mNumMeshes);
+    // * 遍历所有的Mesh, 进行数据的提取
+    for (size_t i=0; i<scene->mNumMeshes; ++i){
+
+
+    }
+
+    return mesh_list;
 }
 }  // namespace ExCCCRender::Asset
