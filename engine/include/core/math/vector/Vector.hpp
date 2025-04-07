@@ -54,6 +54,9 @@ public:
         return VectorBase<2>::operator-=(num), *this;
     }
 
+    float operator[](const size_t index) {
+        return coordinates[index];
+    }
 public:
     Vector2D& SetX(const float x = 0.0f) noexcept {
         return coordinates[0] = x, *this;
@@ -185,6 +188,9 @@ public:
     Vector3D& operator-=(const float num) {
         return VectorBase<3>::operator-=(num), *this;
     }
+    float operator[](const size_t index) {
+        return coordinates[index];
+    }
 
 public:
     Vector3D& SetX(const float x) {
@@ -308,6 +314,9 @@ public:
         return VectorBase::operator+=(num), *this;
     }
 
+    float operator[](const size_t index) {
+        return coordinates[index];
+    }
 public:
     Vector4D& SetX(const float x = float{}) {
         return coordinates[0] = x, *this;
@@ -352,21 +361,6 @@ public:
         return coordinates[3];
     }
 
-    double X() noexcept {
-        return coordinates[0];
-    }
-
-    double Y() noexcept {
-        return coordinates[1];
-    }
-
-    double Z() noexcept {
-        return coordinates[2];
-    }
-
-    double W() noexcept {
-        return coordinates[3];
-    }
 
     double SquareSum() const noexcept {
         return square_sum();

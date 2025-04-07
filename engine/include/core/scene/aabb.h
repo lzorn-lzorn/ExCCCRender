@@ -10,7 +10,7 @@ using namespace ExCCCRender::Core::Illumination;
 /*
  * @note: AABB 是 Mesh 的包围盒子, 其包裹了一个完整的模型(Mesh网格)
  *        AABB内部使用基于空间均匀划分的八叉树来加速求交运算
- * 
+ *
  */
 struct AABB{
 public:
@@ -20,12 +20,12 @@ public:
      * @note: MeshInfo 中 aabb_min 和 aabb_max 是局部坐标系, 这里的可能需要转换为世界坐标
      * @param1: AABB包围的 Mesh, @param2: 该Mesh的局部坐标的原点, 位于世界坐标的哪个点
      */
-    explicit AABB(const MeshInfo&, const Point3D&);
-    AABB(const AABB&) = delete;
-    AABB(AABB&&) = delete;
-    AABB& operator=(const AABB&);
-    AABB& operator=(AABB&&);
-    ~AABB() = default;
+    explicit AABB(const MeshInfo& m, const Point3D& p=Point3D{0,0,0}) : mesh(&m) {}
+    AABB(const AABB&)            = delete;
+    AABB(AABB&&)                 = delete;
+    AABB& operator=(const AABB&) = delete;
+    AABB& operator=(AABB&&)      = delete;
+    ~AABB()                      = default;
 public:
     // * 获取最外面包围盒的两个对角点
     Point3D Max() const;
@@ -39,5 +39,18 @@ public:
 
 private:
     HitInfo* hit_record;
+    const MeshInfo* mesh;
+};
+
+struct AABBRange{
+    explicit AABBRange(const Point3D& min, const Point3D& max) : min(min), max(max) {}
+    HitInfo& Hit() const;
+    bool IsHit(const Ray& ray, double min_time, double max_time) const;
+private:
+    bool _CheckHit() const;
+private:
+    Point3D min; // * AABB的最小点
+    Point3D max; // * AABB的最大点
+    const MeshInfo* mesh; // * AABB包围的Mesh
 };
 }

@@ -2,6 +2,7 @@
 #include <tuple>
 #include <utility>
 #include "pch.hpp"
+#include "tools/parser/ConfigParser.hpp"
 #include "tools/static_for.hpp"
 #include "core/traits.hpp"
 
@@ -100,6 +101,8 @@ protected:
     VectorBase& operator-=(const float number) {
         return operator+=(-number);
     }
+
+
 
 protected:
     template <Arithmetic... Args>
