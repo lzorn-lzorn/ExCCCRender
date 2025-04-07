@@ -57,6 +57,10 @@ public:
     float operator[](const size_t index) {
         return coordinates[index];
     }
+
+    float operator[](const size_t index) const {
+        return coordinates[index];
+    }
 public:
     Vector2D& SetX(const float x = 0.0f) noexcept {
         return coordinates[0] = x, *this;
@@ -191,7 +195,9 @@ public:
     float operator[](const size_t index) {
         return coordinates[index];
     }
-
+    float operator[](const size_t index) const {
+        return coordinates[index];
+    }
 public:
     Vector3D& SetX(const float x) {
         return coordinates[0] = x, *this;
@@ -315,6 +321,9 @@ public:
     }
 
     float operator[](const size_t index) {
+        return coordinates[index];
+    }
+    float operator[](const size_t index) const {
         return coordinates[index];
     }
 public:
