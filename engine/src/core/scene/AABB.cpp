@@ -3,7 +3,7 @@
 namespace ExCCCRender::Scene {
     // ! AABBRange ==========================
     bool AABBRange::IsHit(const Ray& ray, double min_time, double max_time) const {
-        static_for<3>([&](size_t i, auto breaker){
+        static_for<0, 3>([&](auto i, auto breaker){
             auto inv_dir_i = 1.0 / ray.direction[i];
             auto a = (min[i] - ray.origin[i]) * inv_dir_i;
             auto b = (max[i] - ray.origin[i]) * inv_dir_i;

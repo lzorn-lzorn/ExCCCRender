@@ -53,8 +53,12 @@ public:
 
 public:
     // * 获取最外面包围盒的两个对角点
-    Point3D Max() const;
-    Point3D Min() const;
+    Point3D Max() const{
+        return max;
+    }
+    Point3D Min() const{
+        return min;
+    }
     // * 光线Ray是否击中最外层包围盒
     bool IsHit(const Ray& ray, double min_time, double max_time);
     // * 判断光线是否与某一个三角形有交点

@@ -564,7 +564,6 @@ inline void Clamp(Vector& vec,
 template <VectorType Vector>
 inline void VectorClamp(Vector& vec, const Vector& min, const Vector& max){
     constexpr size_t N = Vector::Dimension;
-
     static_for<N>([&](auto i){
         if (vec.coordinates[i] < min.coordinates[i]){
             vec.coordinates[i] = min.coordinates[i];
