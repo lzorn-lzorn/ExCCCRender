@@ -1,6 +1,11 @@
 #include <cstdint>
-#include "core/math/vector/Vector.hpp"
+#include "core/math/vector/vector_detail.hpp"
 
 namespace ExCCCRender::Core {
-struct RGB {};
+struct RGB {
+
+
+private:
+    
+};
 }  // namespace ExCCCRender::Core

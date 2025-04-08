@@ -7,7 +7,7 @@
 namespace ExCCCRender::Core::Math {
 using namespace ExCCCRender::Core::Math::detail;
 
-struct Vector2D : public VectorBase<2> {
+struct Vector2D : public VectorBase<float, 2> {
 public:
     constexpr static size_t Dimension = 2;
 
@@ -27,31 +27,31 @@ public:
     Vector2D& operator=(Vector2D&& vec)      = default;
 
     bool operator==(const Vector2D& vec) const {
-        return VectorBase<2>::operator==(vec);
+        return VectorBase<float, 2>::operator==(vec);
     }
 
     Vector2D& operator+(const Vector2D& other) {
-        return VectorBase<2>::operator+=(other), *this;
+        return VectorBase<float, 2>::operator+=(other), *this;
     }
 
     Vector2D& operator-(const Vector2D& other) {
-        return VectorBase<2>::operator-=(other), *this;
+        return VectorBase<float, 2>::operator-=(other), *this;
     }
 
     Vector2D& operator+=(const Vector2D& other) {
-        return VectorBase<2>::operator+=(other), *this;
+        return VectorBase<float, 2>::operator+=(other), *this;
     }
 
     Vector2D& operator-=(const Vector2D& other) {
-        return VectorBase<2>::operator-=(other), *this;
+        return VectorBase<float, 2>::operator-=(other), *this;
     }
 
     Vector2D& operator+=(const float num) {
-        return VectorBase<2>::operator+=(num), *this;
+        return VectorBase<float, 2>::operator+=(num), *this;
     }
 
     Vector2D& operator-=(const float num) {
-        return VectorBase<2>::operator-=(num), *this;
+        return VectorBase<float, 2>::operator-=(num), *this;
     }
 
     float operator[](const size_t index) {
@@ -127,15 +127,15 @@ public:
     }
 };
 
-struct Vector3D : public VectorBase<3> {
+struct Vector3D : public VectorBase<float, 3> {
 public:
     constexpr static size_t Dimension = 3;
 
 public:
-    explicit Vector3D(const float x, const float y, const float z) : VectorBase<3>(x, y, z) {
+    explicit Vector3D(const float x, const float y, const float z) : VectorBase<float, 3>(x, y, z) {
     }
 
-    explicit Vector3D() : VectorBase<3>(0.0f, 0.0f, 0.0f) {
+    explicit Vector3D() : VectorBase<float, 3>(0.0f, 0.0f, 0.0f) {
     }
 
     ~Vector3D() {
@@ -166,7 +166,7 @@ public:
 
 
     bool operator==(const Vector3D& vec) const {
-        return VectorBase<3>::operator==(vec);
+        return VectorBase<float, 3>::operator==(vec);
     }
 
     Vector3D& operator+(const Vector3D& other) {
@@ -178,19 +178,19 @@ public:
     }
 
     Vector3D& operator+=(const Vector3D& other) {
-        return VectorBase<3>::operator+=(other), *this;
+        return VectorBase<float, 3>::operator+=(other), *this;
     }
 
     Vector3D& operator-=(const Vector3D& other) {
-        return VectorBase<3>::operator-=(other), *this;
+        return VectorBase<float, 3>::operator-=(other), *this;
     }
 
     Vector3D& operator+=(const float num) {
-        return VectorBase<3>::operator+=(num), *this;
+        return VectorBase<float, 3>::operator+=(num), *this;
     }
 
     Vector3D& operator-=(const float num) {
-        return VectorBase<3>::operator-=(num), *this;
+        return VectorBase<float, 3>::operator-=(num), *this;
     }
     float operator[](const size_t index) {
         return coordinates[index];
@@ -273,15 +273,15 @@ public:
     }
 };
 
-struct Vector4D : public VectorBase<4> {
+struct Vector4D : public VectorBase<float, 4> {
 public:
     constexpr static size_t Dimension = 4;
 
 public:
-    explicit Vector4D(const float x, const float y, const float z, const float w) : VectorBase<4>(x, y, z, w) {
+    explicit Vector4D(const float x, const float y, const float z, const float w) : VectorBase<float, 4>(x, y, z, w) {
     }
 
-    explicit Vector4D() : VectorBase<4>(0.0f, 0.0f, 0.0f, 0.0f) {
+    explicit Vector4D() : VectorBase<float, 4>(0.0f, 0.0f, 0.0f, 0.0f) {
     }
 
     ~Vector4D() {
@@ -293,7 +293,7 @@ public:
     Vector4D& operator=(Vector4D&& vec)      = default;
 
     bool operator==(const Vector4D& vec) const {
-        return VectorBase<4>::operator==(vec);
+        return VectorBase<float, 4>::operator==(vec);
     }
 
     Vector4D& operator+(const Vector4D& other) {
@@ -415,7 +415,7 @@ public:
 };
 
 template<size_t N>
-struct VectorXD : public VectorBase<N> {};
+struct VectorXD : public VectorBase<float, N> {};
 
 static const Vector2D ZeroVector2D(0.0f, 0.0f);
 static const Vector3D ZeroVector3D(0.0f, 0.0f, 0.0f);

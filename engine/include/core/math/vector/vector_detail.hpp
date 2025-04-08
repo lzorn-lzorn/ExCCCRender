@@ -9,17 +9,18 @@
 namespace ExCCCRender::Core::Math::detail {
 using namespace ExCCCRender::Tools;
 
-template <size_t N>
+template <Arithmetic Ty, size_t N>
 struct VectorBase {
 public:
+    using value_type = Ty;
     constexpr static size_t Dimension = N;
 
     explicit VectorBase() {
     }
 
 protected:
-    explicit VectorBase(std::initializer_list<float> list) {
-        coordinates = std::array<float, N>(list.begin(), list.end());
+    explicit VectorBase(std::initializer_list<value_type> list) {
+        coordinates = std::array<value_type, N>(list.begin(), list.end());
     }
 
     template <Arithmetic... Args>
@@ -29,7 +30,7 @@ protected:
     }
 
     VectorBase(const VectorBase& other) {
-        static_for([&](size_t i) {
+        static_for<N>([&](size_t i) {
             coordinates[i] = other.coordinates[i];
         });
     }
@@ -75,7 +76,7 @@ protected:
         return *this;
     }
 
-    VectorBase& operator+=(const float number) {
+    VectorBase& operator+=(const value_type number) {
         static_for<N>([&](size_t i) {
             coordinates[i] += number;
         });
@@ -98,7 +99,7 @@ protected:
         return *this;
     }
 
-    VectorBase& operator-=(const float number) {
+    VectorBase& operator-=(const value_type number) {
         return operator+=(-number);
     }
 
@@ -124,7 +125,7 @@ protected:
 
     bool is_zero_vector() const noexcept {
         bool ret     = true;
-        auto epsilon = std::numeric_limits<float>::epsilon();
+        auto epsilon = std::numeric_limits<value_type>::epsilon();
         static_for<0, N>([&](size_t i) {
             if (coordinates[i] <= epsilon) {
                 ret = false;
@@ -183,7 +184,7 @@ protected:
         return res;
     }
 
-    VectorBase& proportionally_change(const float ratio) {
+    VectorBase& proportionally_change(const value_type ratio) {
         static_for<N>([&](size_t i) {
             coordinates[i] *= ratio;
         });
@@ -207,7 +208,7 @@ protected:
     }
 
 protected:
-    std::array<float, N> coordinates;
+    std::array<value_type, N> coordinates;
 
 private:
     template <Arithmetic... Args, size_t... Index>
@@ -221,9 +222,9 @@ private:
     }
 };
 
-template <size_t N>
-inline VectorBase<N> Normalize(const VectorBase<N>& vec) {
-    VectorBase<N> ret(vec);
+template <Arithmetic value_type, size_t N>
+inline VectorBase<value_type, N> Normalize(const VectorBase<value_type, N>& vec) {
+    VectorBase<value_type, N> ret(vec);
     if (vec.is_unit_vector()) {
         return ret;
     }
@@ -231,23 +232,23 @@ inline VectorBase<N> Normalize(const VectorBase<N>& vec) {
     return ret;
 }
 
-template <size_t N>
-inline VectorBase<N> Zoom(const VectorBase<N>& vec, const float ratio) {
-    VectorBase<N> ret(vec);
+template <Arithmetic value_type, size_t N>
+inline VectorBase<value_type, N> Zoom(const VectorBase<value_type, N>& vec, const value_type ratio) {
+    VectorBase<value_type, N> ret(vec);
     ret.Zoom(ratio);
     return ret;
 }
 
-template <size_t N>
-inline VectorBase<N> HadamardProduct(const VectorBase<N>& vec1, const VectorBase<N>& vec2) {
-    VectorBase<N> ret(vec1);
+template <Arithmetic value_type, size_t N>
+inline VectorBase<value_type, N> HadamardProduct(const VectorBase<value_type, N>& vec1, const VectorBase<value_type, N>& vec2) {
+    VectorBase<value_type, N> ret(vec1);
     ret.HadamardProduct(vec2);
     return ret;
 }
 
-template <size_t N>
-inline VectorBase<N> Dot(const VectorBase<N>& vec1, const VectorBase<N>& vec2) {
-    return VectorBase<N>(vec1.dot(vec2));
+template <Arithmetic value_type, size_t N>
+inline VectorBase<value_type, N> Dot(const VectorBase<value_type, N>& vec1, const VectorBase<value_type, N>& vec2) {
+    return VectorBase<value_type, N>(vec1.dot(vec2));
 }
 
 }  // namespace ExCCCRender::Core::Math::detail
