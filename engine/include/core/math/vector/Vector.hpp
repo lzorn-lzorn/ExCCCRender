@@ -2,7 +2,8 @@
 #include <cmath>
 #include <limits>
 #include "tools/static_for.hpp"
-#include "vector_detail.hpp"
+#include "VectorDetail.hpp"
+
 
 namespace ExCCCRender::Core::Math {
 using namespace ExCCCRender::Core::Math::detail;
@@ -544,5 +545,35 @@ inline Vector4D Zoom(const Vector4D& vec, const double ratio) {
     return Vector4D(vec.X() * ratio, vec.Y() * ratio, vec.Z() * ratio, vec.W() * ratio);
 }
 
+template <VectorType Vector>
+inline void Clamp(Vector& vec,
+                  typename std::remove_cvref_t<Vector>::value_type min,
+                  typename std::remove_cvref_t<Vector>::value_type max){
+    constexpr size_t N = Vector::Dimension;
+
+    static_for<N>([&](auto i){
+        if (vec.coordinates[i] < min){
+            vec.coordinates[i] = min;
+        }else if (vec.coordinates[i] > max){
+            vec.coordinates[i] = max;
+        }else{
+            // do nothing...
+        }
+    });
+}
+template <VectorType Vector>
+inline void VectorClamp(Vector& vec, const Vector& min, const Vector& max){
+    constexpr size_t N = Vector::Dimension;
+
+    static_for<N>([&](auto i){
+        if (vec.coordinates[i] < min.coordinates[i]){
+            vec.coordinates[i] = min.coordinates[i];
+        }else if (vec.coordinates[i] > max.coordinates[i]){
+            vec.coordinates[i] = max.coordinates[i];
+        }else{
+            // do nothing...
+        }
+    });
+}
 
 };  // namespace ExCCCRender::Core::Math

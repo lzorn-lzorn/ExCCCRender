@@ -11,14 +11,13 @@ using namespace ExCCCRender::Tools;
 
 template <Arithmetic Ty, size_t N>
 struct VectorBase {
-public:
+
     using value_type = Ty;
     constexpr static size_t Dimension = N;
 
     explicit VectorBase() {
     }
 
-protected:
     explicit VectorBase(std::initializer_list<value_type> list) {
         coordinates = std::array<value_type, N>(list.begin(), list.end());
     }
@@ -105,7 +104,6 @@ protected:
 
 
 
-protected:
     template <Arithmetic... Args>
     VectorBase& mutli_add(const Args&... args) {
         static_assert(sizeof...(Args) == N, "参数数量要和向量维度保持一致");
@@ -150,7 +148,6 @@ protected:
         return count == 1;
     }
 
-protected:
     VectorBase& normalize() {
         if (is_unit_vector()) {
             return *this;
@@ -207,7 +204,6 @@ protected:
         return res;
     }
 
-protected:
     std::array<value_type, N> coordinates;
 
 private:
@@ -252,3 +248,12 @@ inline VectorBase<value_type, N> Dot(const VectorBase<value_type, N>& vec1, cons
 }
 
 }  // namespace ExCCCRender::Core::Math::detail
+
+using namespace ExCCCRender::Core::Math::detail;
+template <typename T>
+concept VectorType = requires {
+    typename T::value_type;
+    requires requires (T t) {
+        []<typename Ty, size_t N>(const VectorBase<Ty, N>&){}(t);
+    };
+};
