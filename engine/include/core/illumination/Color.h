@@ -43,5 +43,53 @@ public:
         return *this;
     }
 
+public:
+    uint8_t R() const {
+        return coordinates[0];
+    }
+    uint8_t G() const {
+        return coordinates[1];
+    }
+    uint8_t B() const {
+        return coordinates[2];
+    }
+
+    RGB& SetR(const uint8_t r) {
+        return coordinates[0] = r, *this;
+    }
+    RGB& SetG(const uint8_t g) {
+        return coordinates[1] = g, *this;
+    }
+    RGB& SetB(const uint8_t b) {
+        return coordinates[2] = b, *this;
+    }
+    RGB& SetRG(const uint8_t r, const uint8_t g){
+        coordinates[0] = r;
+        coordinates[1] = g;
+        return *this;
+    }
+    RGB& SetRB(const uint8_t r, const uint8_t b){
+        coordinates[0] = r;
+        coordinates[2] = b;
+        return *this;
+    }
+    RGB& SetGB(const uint8_t g, const uint8_t b){
+        coordinates[1] = g;
+        coordinates[2] = b;
+        return *this;
+    }
+    RGB& SetRGB(const uint8_t r, const uint8_t g, const uint8_t b) {
+        coordinates[0] = r;
+        coordinates[1] = g;
+        coordinates[2] = b;
+        return *this;
+    }
+    RGB& SetRGB(const RGB& color) {
+        coordinates[0] = color.R();
+        coordinates[1] = color.G();
+        coordinates[2] = color.B();
+        return *this;
+    }
+
 };
 }  // namespace ExCCCRender::Core
