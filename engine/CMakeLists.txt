@@ -31,15 +31,7 @@ add_executable(${PROJECT_NAME} ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 
 add_subdirectory(${ExCCCRender_THIRDPARTY_DIR})
 
-# target_link_libraries(${PROJECT_NAME} PUBLIC thirdparty)
 target_include_directories(${PROJECT_NAME} PUBLIC ${ExCCCRender_INCLUDE_DIR})
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 target_precompile_headers(${PROJECT_NAME} PUBLIC ${ExCCCRender_INCLUDE_DIR}/pch.hpp)
-
-# 链接之后的库
-# target_link_libraries(${PROJECT_NAME} PUBLIC
-# assimp::assimp
-# SDL3::SDL3
-# glfw
-# )

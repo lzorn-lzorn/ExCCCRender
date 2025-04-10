@@ -4,8 +4,8 @@
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 #include "assimp/scene.h"
-// #include "eigen/Dense"
-// #include <eigen/Geometry>
+
+
 #include <fmt/core.h>
 int main() {
     using namespace ExCCCRender::Core::Math;
