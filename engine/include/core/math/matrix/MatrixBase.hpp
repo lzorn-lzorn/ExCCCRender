@@ -8,29 +8,32 @@ template <size_t N, size_t M>
 struct Matrix {};
 
 // 这里判断M>1
-template <size_t N, size_t M>
-    requires(M > 1)
-struct Matrix<N, M> {
-    // Square matrix specialization
-
-    // Identity matrix creation
+template <size_t N>
+struct Matrix<N, N> {
+    // * 获取该维度下的单位矩阵
     static Matrix<N, N> Identity() {
         Matrix<N, N> result;
         // Implementation would initialize diagonal elements to 1
         return result;
     }
 
-    // Determinant calculation (declaration)
+    // * 求其行列式
     double Determinant() const;
 
-    // Inverse matrix calculation (declaration)
-    Matrix<N, N> Inverse() const;
+    // * 获取逆矩阵
+    Matrix<N, N>& Inverse() const;
 
-    // Transpose (for square matrices, size doesn't change)
-    Matrix<N, N> Transpose() const;
+    // * 转置
+    Matrix<N, N>& Transpose() const;
 
-    // Check if matrix is symmetric
+    // * 判断其是否为对称矩阵
     bool IsSymmetric() const;
+
+    // * 矩阵降低一维
+    Matrix<N, N> ReduceDimensionality() {}
+
+    // * 获取矩阵最右侧的常数列
+    Matrix<N, 1> GetConstantBeta() const {}
 };
 
 // 这里判断M==1，使用类特化而不是别名模板

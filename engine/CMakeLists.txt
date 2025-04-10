@@ -23,14 +23,15 @@ find_package(OpenGL REQUIRED)
 
 # message("ExCCCRender_SOURCE_DIR: ${ExCCCRender_SOURCE_DIR}")
 # message("ExCCCRender_INCLUDE_DIR: ${ExCCCRender_INCLUDE_DIR}")
- message("ENGINE_SOURCES: ${ENGINE_SOURCES}")
+message("ENGINE_SOURCES: ${ENGINE_SOURCES}")
+
 # message("ENGINE_HEADERS: ${ENGINE_HEADERS}")
 # message("PROJECT_NAME: ${PROJECT_NAME}")
 add_executable(${PROJECT_NAME} ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 
 add_subdirectory(${ExCCCRender_THIRDPARTY_DIR})
-target_link_libraries(${PROJECT_NAME} PUBLIC thirdparty)
 
+# target_link_libraries(${PROJECT_NAME} PUBLIC thirdparty)
 target_include_directories(${PROJECT_NAME} PUBLIC ${ExCCCRender_INCLUDE_DIR})
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
