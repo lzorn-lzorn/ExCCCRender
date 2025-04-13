@@ -1,7 +1,7 @@
 #pragma once
 #include "core/math/vector/Vector.hpp"
 #include "core/math/Point.h"
-namespace ExCCCRender::Scene {
+namespace ExCCCRender::Core::Scene {
 
 /*
  * @note: 存有交点处的信息 

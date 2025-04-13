@@ -4,7 +4,7 @@
 #include "core/illumination/Ray.h"
 #include "HitInfo.h"
 #include <vector>
-namespace ExCCCRender::Scene {
+namespace ExCCCRender::Core::Scene {
 using namespace ExCCCRender::Asset;
 using namespace ExCCCRender::Core::Math;
 using namespace ExCCCRender::Core::Illumination;

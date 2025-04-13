@@ -3,7 +3,7 @@
 #include "core/math/vector/Vector.hpp"
 #include "core/math/vector/VectorDetail.hpp"
 
-namespace ExCCCRender::Core {
+namespace ExCCCRender::Core::Illumination {
 using namespace ExCCCRender::Core::Math::detail;
 struct RGB : public VectorBase<uint8_t, 3> {
 public:

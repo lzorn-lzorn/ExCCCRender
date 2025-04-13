@@ -1,6 +1,6 @@
 #include "core/scene/AABB.h"
 #include "tools/static_for.hpp"
-namespace ExCCCRender::Scene {
+namespace ExCCCRender::Core::Scene {
     // ! AABBRange ==========================
     bool AABBRange::IsHit(const Ray& ray, double min_time, double max_time) const {
         static_for<0, 3>([&](auto i, auto breaker){
