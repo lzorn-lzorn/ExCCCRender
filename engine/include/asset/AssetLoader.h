@@ -21,7 +21,7 @@ public:
     bool LoadAllFold(const std::string_view);
 
 private:
-    std::vector<MeshInfo> load_one_file_(const std::string_view);
+    void load_one_file_(const std::string_view);
 
 private:
     static std::vector<MeshInfo> mesh_pool;

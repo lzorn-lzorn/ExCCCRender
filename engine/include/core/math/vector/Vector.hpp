@@ -133,6 +133,7 @@ public:
     constexpr static size_t Dimension = 3;
 
 public:
+
     explicit Vector3D(const float x, const float y, const float z) : VectorBase<float, 3>(x, y, z) {
     }
 

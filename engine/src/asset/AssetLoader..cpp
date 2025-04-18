@@ -3,10 +3,11 @@
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 #include "assimp/scene.h"
+#include "core/math/vector/Vector.hpp"
 #include <memory>
 
 namespace ExCCCRender::Asset {
-std::vector<MeshInfo> AssetLoader::load_one_file_(const std::string_view path) {
+void AssetLoader::load_one_file_(const std::string_view path) {
     Assimp::Importer importer;
     auto             path_ = path.data();
 
@@ -22,16 +23,30 @@ std::vector<MeshInfo> AssetLoader::load_one_file_(const std::string_view path) {
     );
     if (!scene || !scene->mRootNode) {
         std::cerr << "FAILED: " << importer.GetErrorString() << std::endl;
-        return std::vector<MeshInfo>(0);
-    }
-    std::vector<MeshInfo> mesh_list;
-    mesh_list.reserve(scene->mNumMeshes);
 
+    }
+    std::vector<MeshInfo> meshes;
+    std::vector<LightInfo> lights;
+    std::vector<CameraInfo> carmers;
+    meshes.reserve(scene->mNumMeshes);
+    lights.reserve(scene->mNumLights);
+    carmers.reserve(scene->mNumCameras);
     // * 遍历所有的Mesh, 进行数据的提取
     for (size_t i=0; i<scene->mNumMeshes; ++i){
-        
+        MeshInfo* mesh = std::allocator<MeshInfo>().allocate(1);
+        auto aimesh = scene->mMeshes[i];
+        mesh->vertexs.reserve(aimesh->mNumVertices);
+        mesh->faces.reserve(aimesh->mNumFaces);
+        // * 处理顶点
+        for (size_t j=0; aimesh->mNumVertices; ++j){
+
+        }
+        // * 处理面
+        for (size_t j=0; aimesh->mNumFaces; ++j){
+
+        }
     }
 
-    return mesh_list;
+
 }
 }  // namespace ExCCCRender::Asset

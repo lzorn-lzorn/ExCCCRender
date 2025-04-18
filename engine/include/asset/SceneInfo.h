@@ -48,6 +48,12 @@ struct LightInfo{
 
 struct CameraInfo{};
 
+struct Scene{
+    std::vector<MeshInfo> meshes;
+    std::vector<LightInfo> lights;
+    std::vector<CameraInfo> carmers;
+};
+
 
 
 }

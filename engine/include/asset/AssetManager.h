@@ -1,5 +1,5 @@
 #pragma once
-
+#include "asset/SceneInfo.h"
 namespace ExCCCRender::Asset {
 
 class AssetManager {
@@ -13,7 +13,7 @@ public:
     }
 
 public:
-
+    std::vector<Scene> scenes;
 private:
     AssetManager()                               = default;
     AssetManager(const AssetManager&)            = delete;
