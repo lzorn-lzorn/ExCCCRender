@@ -47,6 +47,16 @@ bool AssimpLoader::LoadOneFile(const std::string_view path) {
                 aimesh->mVertices->y,  
                 aimesh->mVertices->z
             );
+            mesh->vertexs[j].normal.SetXYZ(
+                aimesh->mNormals->x, 
+                aimesh->mNormals->y, 
+                aimesh->mNormals->z
+            );
+            mesh->vertexs[j].tangent.SetXYZ(
+                aimesh->mTangents->x, 
+                aimesh->mTangents->y, 
+                aimesh->mTangents->z
+            );
         }
         // * 处理面
         for (size_t j=0; aimesh->mNumFaces; ++j){

@@ -12,7 +12,7 @@ struct Vertex{
     Vector3D tangent;  // * 切线信息
     Vector3D bitangent;// * 副切线信息
     Vector3D position; // * 顶点位置
-    Vector2D tex_coord;// * 纹理坐标
+    Vector2D tex_coord;// * 纹理坐标, 合理性存疑
 };
 struct Face{
     int32_t id;                      // * 面 id
