@@ -1,4 +1,4 @@
-#include "asset/AssetLoader.h"
+#include "asset/AssetLoader/AssimpLoader.h"
 #include "asset/SceneInfo.h"
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
@@ -7,7 +7,7 @@
 #include <memory>
 
 namespace ExCCCRender::Asset {
-void AssetLoader::load_one_file_(const std::string_view path) {
+bool AssimpLoader::LoadOneFile(const std::string_view path) {
     Assimp::Importer importer;
     auto             path_ = path.data();
 
@@ -32,14 +32,21 @@ void AssetLoader::load_one_file_(const std::string_view path) {
     lights.reserve(scene->mNumLights);
     carmers.reserve(scene->mNumCameras);
     // * 遍历所有的Mesh, 进行数据的提取
+    size_t ver_index = 1, mesh_index = 1;
     for (size_t i=0; i<scene->mNumMeshes; ++i){
         MeshInfo* mesh = std::allocator<MeshInfo>().allocate(1);
-        auto aimesh = scene->mMeshes[i];
+        aiMesh* aimesh = scene->mMeshes[i];
         mesh->vertexs.reserve(aimesh->mNumVertices);
         mesh->faces.reserve(aimesh->mNumFaces);
+        mesh->id = mesh_index++;
+
         // * 处理顶点
         for (size_t j=0; aimesh->mNumVertices; ++j){
-
+            mesh->vertexs[j].position.SetXYZ(
+                aimesh->mVertices->x, 
+                aimesh->mVertices->y,  
+                aimesh->mVertices->z
+            );
         }
         // * 处理面
         for (size_t j=0; aimesh->mNumFaces; ++j){
