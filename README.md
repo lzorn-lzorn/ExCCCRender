@@ -6,6 +6,12 @@ If you want to build ExCCCRender, you need to install the following third-party 
 - Vulkan (Recommand)
 - fmt::fmt
 
+```zsh
+mkdir build
+cmake .. -DCMAKE_BUILD_TYPE=Release # Debug
+cmake --build build
+bin/ExCCCRender
+```
 
 
 ExCCCRender uses cmake to build and used lots of C++20 feature. So please check your cmake version and C++ standard (Maybe C++23, I'll try)
