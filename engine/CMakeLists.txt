@@ -18,8 +18,18 @@ file(GLOB_RECURSE
     ${ExCCCRender_INCLUDE_DIR}/*.hpp
 )
 
-find_package(Vulkan REQUIRED)
-find_package(OpenGL REQUIRED)
+if(WIN32)
+    find_package(Vulkan REQUIRED)
+    find_package(OpenGL REQUIRED)
+elseif(APPLE)
+    message("APPLE")
+elseif(UNIX)
+    find_package(Vulkan REQUIRED)
+    find_package(OpenGL REQUIRED)
+else()
+    message("UNKONW Platform")
+endif()    
+
 
 # message("ExCCCRender_SOURCE_DIR: ${ExCCCRender_SOURCE_DIR}")
 # message("ExCCCRender_INCLUDE_DIR: ${ExCCCRender_INCLUDE_DIR}")
